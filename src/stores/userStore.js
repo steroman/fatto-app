@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { createAccount } from '@/api/userApi'
+import { createAccount, login } from '@/api/userApi'
 
 export const useUserStore = defineStore('user', () => {
   // State
@@ -19,11 +19,21 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  async function signIn(email, password) {
+    try {
+      user.value = await login(email, password)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return {
     // State
     user,
     // Getters
-    createNewAccount
+
     // Actions
+    createNewAccount,
+    signIn
   }
 })
