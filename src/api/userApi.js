@@ -16,3 +16,13 @@ export const createAccount = async (email, password) => {
   }
   //   return data
 }
+
+export const login = async (email, password) => {
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  if (error) {
+    throw new Error(error.message)
+  } else {
+    console.log(data)
+  }
+  // return data
+}
