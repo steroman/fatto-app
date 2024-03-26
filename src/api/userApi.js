@@ -26,3 +26,17 @@ export const login = async (email, password) => {
   }
   // return data
 }
+
+export const seeCurrentUser = async () => {
+  const localUser = await supabase.auth.getSession()
+  console.log(localUser)
+}
+
+export const logout = async () => {
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    throw new Error(error.message)
+  } else {
+    console.log('logged out')
+  }
+}

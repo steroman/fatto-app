@@ -10,7 +10,19 @@ const password = ref('')
 // const firstName = ref('')
 
 const createUser = () => {
-  userStore.createNewAccount(email.value, password.value)
+  userStore.createUser(email.value, password.value)
+}
+
+const signIn = () => {
+  userStore.signIn(email.value, password.value)
+}
+
+const seeUser = () => {
+  userStore.seeUser()
+}
+
+const signOut = () => {
+  userStore.signOut()
 }
 </script>
 
@@ -32,9 +44,10 @@ const createUser = () => {
   </div> -->
 
   <div class="buttonContainer">
-    <button @click="createUser()">Create</button>
-    <button @click="login">Login</button>
-    <button @click="logout">Logout</button>
+    <button @click="createUser()">Create account</button>
+    <button @click="signIn()">Login</button>
+    <button @click="signOut()">Logout</button>
+    <button @click="seeUser()">See user</button>
   </div>
 </template>
 
