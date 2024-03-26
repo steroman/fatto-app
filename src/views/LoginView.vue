@@ -4,10 +4,8 @@ import { ref } from 'vue'
 
 const userStore = useUserStore()
 
-// const { createUser, login, logout } = userStore
 const email = ref('')
 const password = ref('')
-// const firstName = ref('')
 
 const createUser = () => {
   userStore.createUser(email.value, password.value)
@@ -37,11 +35,6 @@ const signOut = () => {
     <label for="password">Password:</label>
     <input type="password" id="password" v-model="password" />
   </div>
-  <!-- 
-  <div class="inputContainer">
-    <label for="firstName">First name</label>
-    <input type="firstName" id="firstName" v-model="firstName" />
-  </div> -->
 
   <div class="buttonContainer">
     <button @click="createUser()">Create account</button>

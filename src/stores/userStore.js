@@ -4,9 +4,6 @@ import { createAccount, login, seeCurrentUser, logout } from '@/api/userApi'
 
 export const useUserStore = defineStore('user', () => {
   // State
-  //   const email = ref('')
-  //   const password = ref('')
-  //   const firstName = ref('')
   const user = ref(null)
   // Getters
 
