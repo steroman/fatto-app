@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { createTask, deleteTask, fetchAllTasks, updateTask } from '@/api/tasksApi'
 
-const useTasksStore = defineStore('tasks', () => {
+export const useTasksStore = defineStore('tasks', () => {
   // State
   const tasks = ref([])
   // Getters
