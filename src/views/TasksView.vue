@@ -23,6 +23,11 @@ onMounted(() => {
     <template v-if="account && account.data.session.user.email">
       <p>{{ account.data.session.user.email }}</p>
       <span> {{ tasks.length }}</span>
+      <ul>
+        <li v-for="task in tasks" :key="task.id">
+          {{ task.title }}
+        </li>
+      </ul>
     </template>
     <template v-else>
       <p>Loading...</p>
