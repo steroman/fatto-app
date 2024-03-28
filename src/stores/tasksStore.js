@@ -11,6 +11,7 @@ const useTasksStore = defineStore('tasks', () => {
 
   async function fetchTasks() {
     try {
+      // Aquí nacho ha hecho un const data = await fetchAllTasks(). Por si no funciona
       tasks.value = await fetchAllTasks()
       console.log(tasks.value)
     } catch (error) {
