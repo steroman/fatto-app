@@ -23,7 +23,7 @@ onMounted(() => {
     <h1>Tasks view</h1>
     <template v-if="account && account.data.session.user.email">
       <!-- <p>{{ account.data.session.user.email }}</p> -->
-      <CreateTask />
+      <CreateTask :account="account" />
       <span> {{ tasks.length }}</span>
       <ul>
         <li v-for="task in tasks" :key="task.id">

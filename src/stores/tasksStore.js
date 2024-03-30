@@ -5,6 +5,7 @@ import { createTask, deleteTask, fetchAllTasks, updateTask } from '@/api/tasksAp
 export const useTasksStore = defineStore('tasks', () => {
   // State
   const tasks = ref([])
+
   // Getters
 
   // Actions

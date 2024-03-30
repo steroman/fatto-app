@@ -5,12 +5,17 @@ import { useTasksStore } from '@/stores/tasksStore'
 
 const tasksStore = useTasksStore()
 
+const props = defineProps(['account'])
+const userId = props.account.data.session.user.id
 const taskTitle = ref('')
+const date = new Date()
+const formattedDate = date.toISOString().split('.')[0].replace('T', ' ')
 
 const _createTask = () => {
   const task = {
     title: taskTitle.value,
-    inserted_at: Date.now()
+    inserted_at: formattedDate,
+    user_id: userId
   }
 
   tasksStore.createNewTask(task)
