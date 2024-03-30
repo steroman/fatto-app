@@ -7,7 +7,7 @@ export const fetchAllTasks = async () => {
   if (error) {
     throw new Error(error.message)
   } else {
-    console.log(data)
+    // console.log(data)
     return data
   }
 }
@@ -17,6 +17,7 @@ export const createTask = async (task) => {
   if (error) {
     throw new Error(error.message)
   }
+  return true
 }
 
 export const updateTask = async (task) => {
