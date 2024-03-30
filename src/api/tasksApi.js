@@ -17,6 +17,7 @@ export const createTask = async (task) => {
   if (error) {
     throw new Error(error.message)
   }
+  return true
 }
 
 export const updateTask = async (task) => {

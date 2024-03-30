@@ -11,14 +11,16 @@ const taskTitle = ref('')
 const date = new Date()
 const formattedDate = date.toISOString().split('.')[0].replace('T', ' ')
 
-const _createTask = () => {
+const _createTask = async () => {
   const task = {
     title: taskTitle.value,
     inserted_at: formattedDate,
     user_id: userId
   }
 
-  tasksStore.createNewTask(task)
+  await tasksStore.createNewTask(task)
+  tasksStore.fetchTasks()
+  taskTitle.value = ''
 }
 </script>
 

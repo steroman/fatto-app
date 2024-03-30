@@ -21,7 +21,7 @@ export const useTasksStore = defineStore('tasks', () => {
 
   async function createNewTask(task) {
     try {
-      createTask(task)
+      await createTask(task)
     } catch (error) {
       console.error(error)
     }
