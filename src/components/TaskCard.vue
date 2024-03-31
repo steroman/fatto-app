@@ -6,7 +6,7 @@ const props = defineProps({
   }
 })
 
-console.log('Task prop:', props.task)
+// console.log('Task prop:', props.task)
 
 const formatTimestamp = (timestamp) => {
   return new Date(timestamp).toLocaleString()

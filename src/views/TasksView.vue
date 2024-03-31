@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
 import { storeToRefs } from 'pinia'
 import CreateTask from '@/components/CreateTask.vue'
-import Task from '@/components/Task.vue'
+import TaskCard from '@/components/TaskCard.vue'
 
 const account = ref(null)
 const tasksStore = useTasksStore()
@@ -27,7 +27,7 @@ onMounted(() => {
       <CreateTask :account="account" />
       <span>Total tasks: {{ tasks.length }}</span>
       <div clas="tasks-container">
-        <Task v-for="task in tasks" :key="task.id" :task="task" />
+        <TaskCard v-for="task in tasks" :key="task.id" :task="task" />
       </div>
     </template>
     <template v-else>
