@@ -8,10 +8,11 @@ const tasksStore = useTasksStore()
 const props = defineProps(['account'])
 const userId = props.account.data.session.user.id
 const taskTitle = ref('')
-const date = new Date()
-const formattedDate = date.toISOString().split('.')[0].replace('T', ' ')
 
 const _createTask = async () => {
+  const date = new Date()
+  const formattedDate = date.toISOString().split('.')[0].replace('T', ' ')
+
   const task = {
     title: taskTitle.value,
     inserted_at: formattedDate,
