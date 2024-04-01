@@ -20,7 +20,7 @@ const _handleTaskCompletion = async () => {
 const { task } = props
 
 const _deleteTask = async () => {
-  tasksStore.deleteExistingTask(task)
+  await tasksStore.deleteExistingTask(task)
   tasksStore.fetchAllTasks()
 }
 
