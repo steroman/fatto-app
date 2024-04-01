@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabaseClient'
 
 const TABLE_NAME = 'tasks'
 
-export const fetchAllTasks = async () => {
+export const fetchTasks = async () => {
   const { data, error } = await supabase.from(TABLE_NAME).select('*')
   if (error) {
     throw new Error(error.message)

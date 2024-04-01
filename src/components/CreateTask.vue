@@ -19,7 +19,7 @@ const _createTask = async () => {
   }
 
   await tasksStore.createNewTask(task)
-  tasksStore.fetchTasks()
+  tasksStore.fetchAllTasks()
   taskTitle.value = ''
 }
 </script>

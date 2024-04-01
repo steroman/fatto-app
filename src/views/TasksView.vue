@@ -16,15 +16,17 @@ onMounted(async () => {
 })
 
 onMounted(() => {
-  tasksStore.fetchTasks()
+  tasksStore.fetchAllTasks()
 })
 </script>
 
 <template>
   <main>
     <h1>Tasks view</h1>
-    <template v-if="account && tasks && tasks.length">
+    <template v-if="account">
       <CreateTask :account="account" />
+    </template>
+    <template v-if="tasks && tasks.length">
       <span>Total tasks: {{ tasks.length }}</span>
       <div clas="tasks-container">
         <TaskCard v-for="task in tasks" :key="task.id" :task="task" />

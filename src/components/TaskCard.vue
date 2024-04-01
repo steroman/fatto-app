@@ -14,21 +14,15 @@ const props = defineProps({
 const _handleTaskCompletion = async () => {
   task.is_complete = !task.is_complete
   tasksStore.updateExistingTask(task)
-  console.log(task)
+  // console.log(task)
 }
 
 const { task } = props
 
-//   const task = {
-//     title: taskTitle.value,
-//     inserted_at: formattedDate,
-//     user_id: userId
-//   }
-
-//   await tasksStore.createNewTask(task)
-//   tasksStore.fetchTasks()
-
-// }
+const _deleteTask = async () => {
+  await tasksStore.deleteExistingTask(task)
+  tasksStore.fetchAllTasks()
+}
 
 const formatTimestamp = (timestamp) => {
   return new Date(timestamp).toLocaleString()
@@ -62,6 +56,9 @@ const formatTimestamp = (timestamp) => {
         <div class="card-timestamp">
           <span class="card-text6">
             <span>{{ formatTimestamp(task.inserted_at) }}</span>
+          </span>
+          <span class="card-text8">
+            <button @click="_deleteTask()">Delete</button>
           </span>
         </div>
       </div>
