@@ -1,4 +1,8 @@
 <script setup>
+import { useTasksStore } from '@/stores/tasksStore'
+
+const tasksStore = useTasksStore()
+
 const props = defineProps({
   task: {
     type: Object,
@@ -7,6 +11,24 @@ const props = defineProps({
 })
 
 // console.log('Task prop:', props.task)
+const _handleTaskCompletion = async () => {
+  task.is_complete = !task.is_complete
+  tasksStore.updateExistingTask(task)
+  console.log(task)
+}
+
+const { task } = props
+
+//   const task = {
+//     title: taskTitle.value,
+//     inserted_at: formattedDate,
+//     user_id: userId
+//   }
+
+//   await tasksStore.createNewTask(task)
+//   tasksStore.fetchTasks()
+
+// }
 
 const formatTimestamp = (timestamp) => {
   return new Date(timestamp).toLocaleString()
@@ -24,7 +46,12 @@ const formatTimestamp = (timestamp) => {
         </div>
         <div class="card-completedcheckbox">
           <span class="card-text2">
-            <input type="checkbox" name="completed" :checked="task.is_complete" />
+            <input
+              type="checkbox"
+              name="completed"
+              :checked="task.is_complete"
+              @change="_handleTaskCompletion"
+            />
           </span>
         </div>
       </div>
