@@ -19,16 +19,10 @@ const _handleTaskCompletion = async () => {
 
 const { task } = props
 
-//   const task = {
-//     title: taskTitle.value,
-//     inserted_at: formattedDate,
-//     user_id: userId
-//   }
-
-//   await tasksStore.createNewTask(task)
-//   tasksStore.fetchTasks()
-
-// }
+const _deleteTask = async () => {
+  tasksStore.deleteExistingTask(task)
+  tasksStore.fetchAllTasks()
+}
 
 const formatTimestamp = (timestamp) => {
   return new Date(timestamp).toLocaleString()
