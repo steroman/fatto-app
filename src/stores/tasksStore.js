@@ -27,12 +27,20 @@ export const useTasksStore = defineStore('tasks', () => {
     }
   }
 
+  async function updateExistingTask(task) {
+    try {
+      await updateTask(task)
+    } catch (error) {
+      console.error(error)
+    }
+  }
   return {
     // State
     tasks,
     // Getters
     // Actions
     fetchTasks,
-    createNewTask
+    createNewTask,
+    updateExistingTask
   }
 })
