@@ -18,10 +18,6 @@ const signIn = () => {
 const seeUser = () => {
   userStore.seeUser()
 }
-
-const signOut = () => {
-  userStore.signOut()
-}
 </script>
 
 <template>
