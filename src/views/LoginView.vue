@@ -39,7 +39,6 @@ const signOut = () => {
   <div class="buttonContainer">
     <button @click="createUser()">Create account</button>
     <button @click="signIn()">Login</button>
-    <button @click="signOut()">Logout</button>
     <button @click="seeUser()">See user</button>
   </div>
 </template>
