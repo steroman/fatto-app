@@ -15,12 +15,18 @@ export const login = async (email, password) => {
     throw new Error(error.message)
   } else {
     console.log(data)
+    return data.user
   }
 }
 
 export const seeCurrentUser = async () => {
-  const localUser = await supabase.auth.getSession()
-  console.log(localUser)
+  const { data, error } = await supabase.auth.getSession()
+  if (error) {
+    throw new Error(error.message)
+  } else {
+    console.log(data)
+    return data.session?.user
+  }
 }
 
 export const logout = async () => {
@@ -29,5 +35,6 @@ export const logout = async () => {
     throw new Error(error.message)
   } else {
     console.log('logged out')
+    return undefined
   }
 }

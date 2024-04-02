@@ -5,15 +5,19 @@ import { useTasksStore } from '@/stores/tasksStore'
 import { storeToRefs } from 'pinia'
 import CreateTask from '@/components/CreateTask.vue'
 import TaskCard from '@/components/TaskCard.vue'
+import { useUserStore } from '@/stores/userStore'
 
-const account = ref(null)
+// const account = ref(null)
 const tasksStore = useTasksStore()
 const { tasks } = storeToRefs(tasksStore)
+const userStore = useUserStore()
+
+const { user } = storeToRefs(userStore)
 // console.log(tasks)
 
-onMounted(async () => {
-  account.value = await supabase.auth.getSession()
-})
+// onMounted(async () => {
+//   account.value = await supabase.auth.getSession()
+// })
 
 onMounted(() => {
   tasksStore.fetchAllTasks()
@@ -23,8 +27,8 @@ onMounted(() => {
 <template>
   <main>
     <h1>Tasks view</h1>
-    <template v-if="account">
-      <CreateTask :account="account" />
+    <template v-if="user">
+      <CreateTask />
     </template>
     <template v-if="tasks && tasks.length">
       <span>Total tasks: {{ tasks.length }}</span>
@@ -33,7 +37,7 @@ onMounted(() => {
       </div>
     </template>
     <template v-else>
-      <p v-if="!account">Loading account information...</p>
+      <p v-if="!user">Loading account information...</p>
       <p v-else-if="!tasks">Loading tasks...</p>
       <p v-else>No tasks available.</p>
     </template>

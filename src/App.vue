@@ -1,4 +1,16 @@
-<script setup></script>
+<script setup>
+import { useUserStore } from '@/stores/userStore'
+import { useRouter } from 'vue-router'
+
+const userStore = useUserStore()
+
+const router = useRouter()
+
+const logOut = async () => {
+  await userStore.signOut()
+  router.push('/login')
+}
+</script>
 
 <template>
   <header>
@@ -8,6 +20,7 @@
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
         <RouterLink to="/tasks">Tasks</RouterLink>
+        <button @click="logOut()">Logout</button>
       </nav>
     </div>
   </header>

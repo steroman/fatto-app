@@ -1,22 +1,14 @@
 <script setup>
-// import { supabase } from '@/lib/supabaseClient'
 import { ref } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
 
 const tasksStore = useTasksStore()
 
-const props = defineProps(['account'])
-const userId = props.account.data.session.user.id
 const taskTitle = ref('')
 
 const _createTask = async () => {
-  const date = new Date()
-  const formattedDate = date.toISOString().split('.')[0].replace('T', ' ')
-
   const task = {
-    title: taskTitle.value,
-    inserted_at: formattedDate,
-    user_id: userId
+    title: taskTitle.value
   }
 
   await tasksStore.createNewTask(task)
