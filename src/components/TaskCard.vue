@@ -1,4 +1,5 @@
 <script setup>
+import { defineProps } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
 
 const tasksStore = useTasksStore()
@@ -10,11 +11,9 @@ const props = defineProps({
   }
 })
 
-// console.log('Task prop:', props.task)
 const _handleTaskCompletion = async () => {
   task.is_complete = !task.is_complete
   tasksStore.updateExistingTask(task)
-  // console.log(task)
 }
 
 const { task } = props
@@ -30,48 +29,24 @@ const formatTimestamp = (timestamp) => {
 </script>
 
 <template>
-  <div class="card-container">
-    <div class="card-card">
-      <div class="card-heading">
-        <div class="card-title">
-          <span class="card-text">
-            <span>{{ task.title }}</span>
-          </span>
-        </div>
-        <div class="card-completedcheckbox">
-          <span class="card-text2">
-            <input
-              type="checkbox"
-              name="completed"
-              :checked="task.is_complete"
-              @change="_handleTaskCompletion"
-            />
-          </span>
-        </div>
-      </div>
-      <div class="card-body">
-        <span class="card-text4">
-          <span>Created on:</span>
-        </span>
-        <div class="card-timestamp">
-          <span class="card-text6">
-            <span>{{ formatTimestamp(task.inserted_at) }}</span>
-          </span>
-          <span class="card-text8">
-            <button @click="_deleteTask()">Delete</button>
-          </span>
-        </div>
-      </div>
+  <div class="bg-blue-200 rounded p-4 mb-4">
+    <div class="flex justify-between items-center mb-2">
+      <div class="font-semibold text-lg">{{ task.title }}</div>
+      <input type="checkbox" v-model="task.is_complete" @change="_handleTaskCompletion" class="form-checkbox h-5 w-5 text-blue-500">
+    </div>
+    <div class="flex justify-between">
+      <div class="text-sm text-gray-700">Created on: {{ formatTimestamp(task.inserted_at) }}</div>
+      <button @click="_deleteTask()" class="text-red-500">Delete</button>
     </div>
   </div>
 </template>
 
 <style scoped>
-.card-container {
+
+/* .card-container {
   width: 100%;
   display: flex;
   overflow: auto;
-  /* min-height: 100vh; */
   align-items: center;
   flex-direction: column;
 }
@@ -173,5 +148,5 @@ const formatTimestamp = (timestamp) => {
   line-height: 24px;
   font-stretch: normal;
   text-decoration: none;
-}
+} */
 </style>

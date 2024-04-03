@@ -1,23 +1,22 @@
 <script setup>
-import { supabase } from '@/lib/supabaseClient'
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
 import { storeToRefs } from 'pinia'
 import CreateTask from '@/components/CreateTask.vue'
 import TaskCard from '@/components/TaskCard.vue'
 import { useUserStore } from '@/stores/userStore'
+import { useRouter } from 'vue-router'
 
-// const account = ref(null)
+const router = useRouter()
 const tasksStore = useTasksStore()
 const { tasks } = storeToRefs(tasksStore)
 const userStore = useUserStore()
-
 const { user } = storeToRefs(userStore)
-// console.log(tasks)
 
-// onMounted(async () => {
-//   account.value = await supabase.auth.getSession()
-// })
+const logOut = async () => {
+  await userStore.signOut()
+  router.push('/login')
+}
 
 onMounted(() => {
   tasksStore.fetchAllTasks()
@@ -25,14 +24,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <main>
-    <h1>Tasks view</h1>
+  <main class="container mx-auto">
+    <h1 class="text-3xl font-semibold mb-4">Your tasks</h1>
     <template v-if="user">
       <CreateTask />
     </template>
     <template v-if="tasks && tasks.length">
-      <span>Total tasks: {{ tasks.length }}</span>
-      <div clas="tasks-container">
+      <p class="mb-2">Total tasks: {{ tasks.length }}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <TaskCard v-for="task in tasks" :key="task.id" :task="task" />
       </div>
     </template>
@@ -41,7 +40,10 @@ onMounted(() => {
       <p v-else-if="!tasks">Loading tasks...</p>
       <p v-else>No tasks available.</p>
     </template>
+    <button @click="logOut()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Logout</button>
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>

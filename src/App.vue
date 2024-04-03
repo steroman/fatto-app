@@ -1,31 +1,31 @@
 <script setup>
-import { useUserStore } from '@/stores/userStore'
-import { useRouter } from 'vue-router'
+// import { useUserStore } from '@/stores/userStore'
+// import { useRouter } from 'vue-router'
+// import NavBar from '@/components/NavBar.vue'
 
-const userStore = useUserStore()
+// const userStore = useUserStore()
 
-const router = useRouter()
+// const router = useRouter()
 
-const logOut = async () => {
-  await userStore.signOut()
-  router.push('/login')
-}
+// const logOut = async () => {
+//   await userStore.signOut()
+//   router.push('/login')
+// }
 </script>
 
 <template>
   <header>
     <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
+      <RouterView />
+        <!-- <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
         <RouterLink to="/tasks">Tasks</RouterLink>
         <button @click="logOut()">Logout</button>
-      </nav>
+      </nav> -->
     </div>
   </header>
 
-  <RouterView />
 </template>
 
 <style scoped>
