@@ -7,11 +7,11 @@ import { required, email, sameAs } from '@vuelidate/validators'
 const userStore = useUserStore()
 
 const createUser = () => {
-  userStore.createUser(form.email.value, form.password.value)
+  userStore.createUser(form.email, form.password)
 }
 
 const signIn = () => {
-  userStore.signIn(form.email.value, form.password.value)
+  userStore.signIn(form.email, form.password)
 }
 
 const seeUser = () => {
