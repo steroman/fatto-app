@@ -1,9 +1,8 @@
 <script setup>
+import NavBar from '@/components/NavBar.vue'
 </script>
 <template>
-  <main>
-    <h1>Home View</h1>
-  </main>
+    <NavBar />
 </template>
 <style scoped>
 </style>

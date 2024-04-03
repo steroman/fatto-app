@@ -1,11 +1,13 @@
 <script setup>
-import { supabase } from '@/lib/supabaseClient'
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
 import { storeToRefs } from 'pinia'
 import CreateTask from '@/components/CreateTask.vue'
 import TaskCard from '@/components/TaskCard.vue'
 import { useUserStore } from '@/stores/userStore'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // const account = ref(null)
 const tasksStore = useTasksStore()
@@ -13,11 +15,11 @@ const { tasks } = storeToRefs(tasksStore)
 const userStore = useUserStore()
 
 const { user } = storeToRefs(userStore)
-// console.log(tasks)
 
-// onMounted(async () => {
-//   account.value = await supabase.auth.getSession()
-// })
+const logOut = async () => {
+  await userStore.signOut()
+  router.push('/login')
+}
 
 onMounted(() => {
   tasksStore.fetchAllTasks()
@@ -41,6 +43,7 @@ onMounted(() => {
       <p v-else-if="!tasks">Loading tasks...</p>
       <p v-else>No tasks available.</p>
     </template>
+    <button @click="logOut()">Logout</button>
   </main>
 </template>
 

@@ -48,8 +48,7 @@ async function handleSubmit() {
   if (!result) {
     // If there are errors in the form, show an alert indicating that the form is invalid
     alert('The form has errors')
-    return
-  }
+   }
   // If the form is valid, perform some action with the form data
   alert('Form submitted successfully')
 }
