@@ -1,11 +1,8 @@
 <script setup>
 import { useUserStore } from '@/stores/userStore'
 import { useVuelidate } from '@vuelidate/core'
-import { required, email } from '@vuelidate/validators'
+import { required, email, sameAs } from '@vuelidate/validators'
 import { reactive, computed } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
 
 const userStore = useUserStore()
 
@@ -14,8 +11,10 @@ const userStore = useUserStore()
 // }
 
 const form = reactive({
+  name: '',
   email: '',
   password: '',
+  confirmPassword: ''
 })
 
 const rules = computed(() => {
@@ -25,15 +24,19 @@ const rules = computed(() => {
       required, // Email is required
       email // Must be a valid email address
     },
-    password: { required } // Password is required
+    password: { required }, // Password is required
+    confirmPassword: {
+      required, // Password confirmation is required
+      sameAs: sameAs(form.password) // Must match the value of the entered password
+    }
   }
 })
 
 const v$ = useVuelidate(rules, form)
 
-const signInAndRedirect = async () => {
-  await userStore.signIn(form.email, form.password)
-  router.push('/tasks')
+const signUp = async () => {
+  await userStore.createUser(form.email, form.password)
+  // router.push('/tasks')
 }
 
 async function handleSubmit() {
@@ -42,16 +45,21 @@ async function handleSubmit() {
   if (!result) {
     // If there are errors in the form, show an alert indicating that the form is invalid
     alert('The form has errors')
+  } else {
+    signUp()
   }
   // If the form is valid, perform some action with the form data
-  signInAndRedirect()
 }
 
 </script>
 <template>
     <div class="container mx-auto">
-        <h1 class="text-2xl font-semibold mt-8">Login to TodoList</h1>
+        <h1 class="text-2xl font-semibold mt-8">Sign Up for to TooDoo</h1>
         <form class="mt-4" @submit.prevent="handleSubmit">
+        <div class="mb-4">
+            <label for="name" class="block">Name</label>
+            <input type="text" id="name" v-model="form.name" class="w-full border p-2">
+        </div>
         <div class="mb-4">
             <label for="email" class="block">Email</label>
             <input type="text" id="email" v-model="form.email" class="w-full border p-2">
@@ -62,10 +70,14 @@ async function handleSubmit() {
             <input type="password" id="password" v-model="form.password" class="w-full border p-2">
             <span v-if="v$.password.$error">{{ v$.password.$errors[0].$message }}</span>
         </div>
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2">Login</button>
+        <div class="mb-4">
+            <label for="confirm-password" class="block">Repeat password</label>
+            <input type="password" id="confirm-password" v-model="form.confirmPassword" class="w-full border p-2">
+            <span v-if="v$.confirmPassword.$error">{{ v$.confirmPassword.$errors[0].$message }}</span>
+        </div>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2">Sign up</button>
         </form>
-        <p class="mt-4">Don't have an account? <router-link to="/signup" class="text-blue-500">Sign up</router-link></p>
-        <p><router-link to="/forgot-password" class="text-blue-500">Forgot password?</router-link></p>
+        <p class="mt-4">Already have an account?<router-link to="/login" class="text-blue-500">Sign in</router-link></p>
     </div>
 </template>
 
