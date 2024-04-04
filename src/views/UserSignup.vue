@@ -6,10 +6,6 @@ import { reactive, computed } from 'vue'
 
 const userStore = useUserStore()
 
-// const signIn = () => {
-//   userStore.signIn(form.email, form.password)
-// }
-
 const form = reactive({
   name: '',
   email: '',
@@ -35,8 +31,7 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, form)
 
 const signUp = async () => {
-  await userStore.createUser(form.email, form.password)
-  // router.push('/tasks')
+  await userStore.createUser(form.email, form.password, form.name) // Assuming form.name contains the display name
 }
 
 async function handleSubmit() {
@@ -52,6 +47,7 @@ async function handleSubmit() {
 }
 
 </script>
+
 <template>
     <div class="container mx-auto">
         <h1 class="text-2xl font-semibold mt-8">Sign Up for to TooDoo</h1>

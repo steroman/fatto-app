@@ -37,11 +37,6 @@ const router = createRouter({
       component: () => import('@/views/TasksView.vue'),
       meta: { requiresAuth: true }
     },
-    {
-      path: '/unauthorized',
-      name: 'unauthorized',
-      component: () => import('@/views/NoAuthView.vue')
-    }
   ]
 })
 
