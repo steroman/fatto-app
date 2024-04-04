@@ -9,9 +9,9 @@ export const useUserStore = defineStore('user', {
     // Getters
 
     // Actions
-    async function createUser(email, password) {
+    async function createUser(email, password, displayName) {
       try {
-        user.value = await createAccount(email, password)
+        await createAccount(email, password, displayName)
       } catch (error) {
         console.error(error)
       }
