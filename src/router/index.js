@@ -29,7 +29,7 @@ const router = createRouter({
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      component: () => import('@/views/ResetPassword.vue')
+      component: () => import('@/views/ForgotPassword.vue')
     },
     {
       path: '/tasks',
@@ -37,6 +37,12 @@ const router = createRouter({
       component: () => import('@/views/TasksView.vue'),
       meta: { requiresAuth: true }
     },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: () => import('@/views/ResetPassword.vue'),
+      meta: { requiresAuth: true }
+    }
   ]
 })
 
