@@ -51,7 +51,7 @@ export const useUserStore = defineStore('user', {
 
     async function updateUserPassword(password) {
       try {
-        user.value = await updateUser(password)
+        user.value = await updateUser({ password })
       } catch (error) {
         console.error(error)
       }
