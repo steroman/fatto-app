@@ -1,6 +1,13 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { createAccount, login, seeCurrentUser, logout } from '@/api/userApi'
+import {
+  createAccount,
+  login,
+  seeCurrentUser,
+  logout,
+  updateUser,
+  resetPassWithEmail
+} from '@/api/userApi'
 
 export const useUserStore = defineStore('user', {
   state: () => {
@@ -42,6 +49,22 @@ export const useUserStore = defineStore('user', {
       }
     }
 
+    async function updateUserPassword(password) {
+      try {
+        user.value = await updateUser({ password })
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    async function resetPassword(email) {
+      try {
+        user.value = await resetPassWithEmail(email)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
     return {
       // State
       user,
@@ -51,7 +74,9 @@ export const useUserStore = defineStore('user', {
       createUser,
       signIn,
       seeUser,
-      signOut
+      signOut,
+      updateUserPassword,
+      resetPassword
     }
   },
   persist: {

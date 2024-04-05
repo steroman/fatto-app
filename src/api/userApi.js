@@ -6,9 +6,9 @@ export const createAccount = async (email, password, displayName) => {
     password,
     options: {
       data: {
-        display_name: displayName,
-      },
-    },
+        display_name: displayName
+      }
+    }
   })
   if (error) {
     throw new Error(error.message)
@@ -44,5 +44,30 @@ export const logout = async () => {
   } else {
     console.log('logged out')
     return undefined
+  }
+}
+
+export const resetPassWithEmail = async (email) => {
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: 'http://localhost:5173/reset-password'
+  })
+  if (error) {
+    throw new Error(error.message)
+  } else {
+    console.log('ResetPassWithEmail data -->', data)
+    return data
+  }
+}
+
+export const updateUser = async (user) => {
+  const { data, error } = await supabase.auth.updateUser({
+    // email: user.email,
+    password: user.password
+  })
+  if (error) {
+    throw new Error(error.message)
+  } else {
+    console.log('updateUser data -->', data)
+    return data
   }
 }
