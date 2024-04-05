@@ -30,6 +30,7 @@ const v$ = useVuelidate(rules, form)
 
 const updatePassword = async () => {
   await userStore.updateUserPassword(form.password)
+  confirmationSent.value = true
 }
 
 const confirmationSent = ref(false)
@@ -64,7 +65,7 @@ async function handleSubmit() {
     <h2 class="text-xl font-semibold mt-8">Password updated</h2>
     <p class="text-sm mt-2">You're ready to get back to your tasks.</p>
     <button @click="router.push('/tasks')" class="bg-blue-500 text-white px-4 py-2 mt-4">
-      See tasks
+      Go to tasks
     </button>
   </div>
 </template>
