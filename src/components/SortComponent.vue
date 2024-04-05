@@ -11,20 +11,22 @@
   import { useTasksStore } from '@/stores/tasksStore'
   
   const tasksStore = useTasksStore();
-  const selectedSort = ref(tasksStore.sortingPreference);
+  const selectedSort = ref(tasksStore.sortingPreference); // Initialize selectedSort as a ref
   const sortingOptions = tasksStore.sortingOptions;
   
-  const applySorting = () => {
-    localStorage.setItem('sortingPreference', selectedSort.value);
-    tasksStore.sortingPreference = selectedSort.value;
-  };
+  // Watch for changes to the sortingPreference in the store
+  watch(() => tasksStore.sortingPreference, (newSortOption) => {
+    selectedSort.value = newSortOption; // Update selectedSort in SortComponent
+  });
   
-  watch(selectedSort, () => {
-    applySorting();
-    tasksStore.fetchAllTasks();
+  // Watch for changes to the selected sorting option
+  watch(selectedSort, (newSortOption) => {
+    tasksStore.sortingPreference = newSortOption; // Update the sorting preference in the store
+    tasksStore.fetchAllTasks(); // Fetch tasks with the new sorting preference
   });
   </script>
   
   <style scoped>
+  /* Add custom styles if needed */
   </style>
   

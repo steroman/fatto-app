@@ -15,6 +15,10 @@ export const useTasksStore = defineStore('tasks', () => {
     { label: 'Name Z to A', value: 'nameZToA' }
   ];
   const sortingPreference = ref(localStorage.getItem('sortingPreference') || 'activeFirst');
+
+  // Shared reactive reference for sorting preference
+  const sharedSortingPreference = sortingPreference;
+
   // Getters
 
   // Actions
@@ -86,6 +90,7 @@ export const useTasksStore = defineStore('tasks', () => {
     tasks,
     sortingOptions,
     sortingPreference,
+    sharedSortingPreference, // Export the shared reactive reference
     // Getters
     // Actions
     fetchAllTasks,

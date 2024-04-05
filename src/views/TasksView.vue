@@ -7,6 +7,7 @@ import TaskCard from '@/components/TaskCard.vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 import SortComponent from '@/components/SortComponent.vue'
+import SortingModal from '@/components/SortingModal.vue'
 
 const router = useRouter()
 const tasksStore = useTasksStore()
@@ -34,6 +35,7 @@ onMounted(() => {
       <p class="mb-2">Total tasks: {{ tasks.length }}</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <SortComponent />
+        <SortingModal />
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <TaskCard v-for="task in tasks" :key="task.id" :task="task" />
