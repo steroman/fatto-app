@@ -6,6 +6,8 @@ import CreateTask from '@/components/CreateTask.vue'
 import TaskCard from '@/components/TaskCard.vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
+import SortComponent from '@/components/SortComponent.vue'
+import SortingModal from '@/components/SortingModal.vue'
 
 const router = useRouter()
 const tasksStore = useTasksStore()
@@ -31,6 +33,16 @@ onMounted(() => {
     </template>
     <template v-if="tasks && tasks.length">
       <p class="mb-2">Total tasks: {{ tasks.length }}</p>
+      <div class="sorting-tools flex justify-between">
+        <!-- SortComponent for desktop -->
+        <div class="hidden sm:block">
+          <SortComponent />
+        </div>
+        <!-- SortingModal for mobile -->
+        <div class="sm:hidden">
+          <SortingModal />
+        </div>
+      </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <TaskCard v-for="task in tasks" :key="task.id" :task="task" />
       </div>
@@ -43,6 +55,7 @@ onMounted(() => {
     <button @click="logOut()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Logout</button>
   </main>
 </template>
+
 
 <style scoped>
 
