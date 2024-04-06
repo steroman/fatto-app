@@ -30,6 +30,7 @@ export const useUserStore = defineStore('user', {
         console.log('User info retrieved:', user.value)
       } catch (error) {
         console.error(error)
+        throw error  // Propagate the error to the component
       }
     }
 
