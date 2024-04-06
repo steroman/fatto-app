@@ -22,6 +22,8 @@ const logOut = async () => {
 
 onMounted(() => {
   tasksStore.fetchAllTasks()
+  userStore.seeUser()
+  console.log(user)
 })
 </script>
 
