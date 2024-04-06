@@ -2,7 +2,7 @@
   <div class="container mx-auto">
     <!-- Sign-up form -->
     <div v-if="!confirmationSent">
-      <h1 class="text-2xl font-semibold mt-8">Sign up for to DoToo</h1>
+      <h1 class="text-2xl font-semibold mt-8">Sign p for to DoToo</h1>
       <form class="mt-4" @submit.prevent="handleSubmit">
         <div class="mb-4">
           <label for="name" class="block">Name</label>
@@ -32,7 +32,7 @@
     <div v-if="confirmationSent" class="mt-8">
       <h2 class="text-xl font-semibold">Check your inbox</h2>
       <p class="text-sm mt-2">
-        A confirmation email has been sent to {{ form.email }}. Please check your inbox to verify your account.
+        We sent an email to {{ form.email }}. Open the link in the email to verify your account and start using DoToo.
       </p>
       <button @click="redirectToHome" class="bg-blue-500 text-white px-4 py-2 mt-4">
         Go back home
@@ -44,7 +44,7 @@
 <script setup>
 import { useUserStore } from '@/stores/userStore'
 import { useVuelidate } from '@vuelidate/core'
-import { required, email } from '@vuelidate/validators'
+import { required, email, sameAs } from '@vuelidate/validators'
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -61,10 +61,9 @@ const form = reactive({
 // Define form validation rules
 const rules = computed(() => {
   return {
-    name: { required }, // Name is required
     email: { required, email }, // Email is required and must be a valid email address
     password: { required }, // Password is required
-    confirmPassword: { required } // Password confirmation is required
+    confirmPassword: { required, sameAsPassword: sameAs(form.password) } // Password confirmation is required
   }
 })
 
