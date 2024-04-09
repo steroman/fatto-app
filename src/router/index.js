@@ -49,16 +49,25 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
 
-  if (userStore.user === undefined) {
-    await userStore.seeUser()
-  }
+  // Wait for seeUser() to complete
+  await userStore.seeUser()
 
-  if (to.path === '/login' && userStore.user) {
-    next('/tasks')
-  } else if (to.path !== '/login' && to.meta.requiresAuth && !userStore.user) {
-    next('/login')
+  console.log('Current route:', to.path)
+  console.log('Authenticated user:', userStore.user)
+  
+  if (userStore.user?.recovery_sent_at && to.path !== '/reset-password') {
+    next('/reset-password')
   } else {
-    next()
+    if ((to.path === '/login' || to.path === '/') && userStore.user) {
+      // console.log('Redirecting to /tasks')
+      next('/tasks') // Redirect to /tasks if the user is already authenticated
+    } else if (to.path !== '/login' && to.meta.requiresAuth && !userStore.user) {
+      // console.log('Redirecting to /login')
+      next('/login')
+    } else {
+      // console.log('Allowing navigation')
+      next()
+    }
   }
 })
 
