@@ -8,6 +8,10 @@ import {
   updateUser,
   resetPassWithEmail
 } from '@/api/userApi'
+import {
+  fetchSortingPreference,
+  updateSortingPreference
+ } from '@/api/settingsApi'
 
 export const useUserStore = defineStore('user', {
   state: () => {
@@ -66,6 +70,24 @@ export const useUserStore = defineStore('user', {
       }
     }
 
+    async function fetchUserSortingPreference(userId) {
+      try {
+        const sortingPreference = await fetchSortingPreference(userId)
+        console.log(sortingPreference)
+        // tasksStore.sortingPreference = sortingPreference 
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    async function updateUserSortingPreference(userId, sortingPreference) {
+      try {
+        await updateSortingPreference(userId, sortingPreference)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
     return {
       // State
       user,
@@ -77,7 +99,9 @@ export const useUserStore = defineStore('user', {
       seeUser,
       signOut,
       updateUserPassword,
-      resetPassword
+      resetPassword,
+      fetchUserSortingPreference,
+      updateUserSortingPreference
     }
   },
   persist: {

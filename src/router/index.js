@@ -52,8 +52,8 @@ router.beforeEach(async (to, from, next) => {
   // Wait for seeUser() to complete
   await userStore.seeUser()
 
-  console.log('Current route:', to.path)
-  console.log('Authenticated user:', userStore.user)
+  // console.log('Current route:', to.path)
+  // console.log('Authenticated user:', userStore.user)
   
   if (userStore.user?.recovery_sent_at && to.path !== '/reset-password') {
     next('/reset-password')
