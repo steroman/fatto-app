@@ -10,7 +10,9 @@ import {
 } from '@/api/userApi'
 import {
   fetchSortingPreference,
-  updateSortingPreference
+  updateSortingPreference,
+  fetchHideCompletedSetting,
+  updateHideCompletedSetting
  } from '@/api/settingsApi'
 
 
@@ -19,6 +21,7 @@ export const useUserStore = defineStore('user', {
     // State
     const user = ref(null)
     const sortingPreference = ref('')
+    const hideCompletedSetting = ref(null)
     // Getters
 
     // Actions
@@ -90,6 +93,24 @@ export const useUserStore = defineStore('user', {
       }
     }
 
+    async function fetchUserHideCompletedSetting() {
+      try {
+        const hideCompletedSettingFetched = await fetchHideCompletedSetting(user.value.id)
+        hideCompletedSetting.value = hideCompletedSettingFetched
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    async function updateUserHideCompletedSetting(newHideCompletedSetting) {
+      try {
+        const updatedHideCompletedSetting = await updateHideCompletedSetting(user.value.id, newHideCompletedSetting)
+        hideCompletedSetting.value = updatedHideCompletedSetting
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
     return {
       // State
       user,
@@ -104,7 +125,9 @@ export const useUserStore = defineStore('user', {
       updateUserPassword,
       resetPassword,
       fetchUserSortingPreference,
-      updateUserSortingPreference
+      updateUserSortingPreference,
+      fetchUserHideCompletedSetting,
+      updateUserHideCompletedSetting
     }
   },
   persist: {
