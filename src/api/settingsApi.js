@@ -27,3 +27,25 @@ export const updateSortingPreference = async (userId, sortingPreference) => {
     }
     return data[0].sorting_preference
 }
+
+export const fetchHideCompletedSetting = async (userId) => {
+  const { data, error } = await supabase
+    .from(TABLE_NAME)
+    .select('hide_completed')
+    .eq('user_id', userId)
+  if (error) {
+    throw new Error(error.message)
+  } return data[0].hide_completed
+}
+
+export const updateHideCompletedSetting = async (userId, hideCompleted) => {
+  const { data, error } = await supabase
+    .from(TABLE_NAME)
+    .update({ hide_completed: hideCompleted })
+    .eq('user_id', userId)
+    .select()
+  if (error) {
+    throw new Error(error.message)
+  }
+  return data[0].hide_completed
+}
