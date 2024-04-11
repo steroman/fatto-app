@@ -1,18 +1,21 @@
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
-import { storeToRefs } from 'pinia'
 import CreateTask from '@/components/CreateTask.vue'
 import TaskCard from '@/components/TaskCard.vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 import SortTasks from '@/components/SortTasks.vue'
+import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 const tasksStore = useTasksStore()
-const { taskSortered } = storeToRefs(tasksStore)
 const userStore = useUserStore()
-const { user } = storeToRefs(userStore)
+
+const { taskSortered } = storeToRefs(tasksStore)
+const { user, hideCompletedSetting } = storeToRefs(userStore)
+
+const newHideCompletedSetting = ref(hideCompletedSetting.value)
 
 const logOut = async () => {
   await userStore.signOut()
@@ -20,8 +23,10 @@ const logOut = async () => {
 }
 
 onMounted(async () => {
-  await tasksStore.fetchAllTasks()
+  await userStore.fetchUserHideCompletedSetting()
   await userStore.fetchUserSortingPreference()
+  await tasksStore.fetchAllTasks()
+  console.log('tasks ----> ', taskSortered)
 })
 </script>
 
@@ -47,9 +52,16 @@ onMounted(async () => {
     </template>
     <button @click="logOut()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded">Logout</button>
     <button><router-link to="/settings" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Settings</router-link></button>
+    <div class="flex flex-col">
+      <div class="form-control w-52">
+        <label class="cursor-pointer label">
+          <span class="label-text">Hide completed tasks</span> 
+          <input type="checkbox" class="toggle toggle-accent" v-model="newHideCompletedSetting" @change="userStore.updateUserHideCompletedSetting(newHideCompletedSetting)" />
+        </label>
+      </div>
+    </div>
   </main>
 </template>
-
 
 <style scoped>
 

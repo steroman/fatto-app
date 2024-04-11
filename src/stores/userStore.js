@@ -115,6 +115,7 @@ export const useUserStore = defineStore('user', {
       // State
       user,
       sortingPreference,
+      hideCompletedSetting,
       // Getters
 
       // Actions
