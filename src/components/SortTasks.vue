@@ -29,10 +29,19 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import { useTasksStore } from '@/stores/tasksStore'
+  import { useUserStore } from '@/stores/userStore'
   
   const tasksStore = useTasksStore();
+  const userStore = useUserStore();
+
+  onMounted(() => {
+    const userId = userStore.user.id;
+    tasksStore.fetchAllTasks(userId);
+  }
+  );
+
   const selectedSort = ref(tasksStore.sortingPreference);
   const sortingOptions = tasksStore.sortingOptions;
   const sortModal = ref(null);
@@ -45,11 +54,12 @@
     sortModal.value.close();
   };
   
-  const applySorting = () => {
-    localStorage.setItem('sortingPreference', selectedSort.value);
-    tasksStore.sortingPreference = selectedSort.value;
-    tasksStore.fetchAllTasks();
-  };
+const applySorting = () => {
+  const userId = userStore.user.id; // Retrieve userId from userStore
+  tasksStore.sortingPreference = selectedSort.value;
+  tasksStore.fetchAllTasks(userId); // Pass userId to fetchAllTasks
+  userStore.updateUserSortingPreference(userId, selectedSort.value); 
+};
   </script>
   
   <style scoped>

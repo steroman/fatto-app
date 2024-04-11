@@ -12,6 +12,8 @@ import {
   fetchSortingPreference,
   updateSortingPreference
  } from '@/api/settingsApi'
+import { useTasksStore } from '@/stores/tasksStore'
+
 
 export const useUserStore = defineStore('user', {
   state: () => {
@@ -73,8 +75,7 @@ export const useUserStore = defineStore('user', {
     async function fetchUserSortingPreference(userId) {
       try {
         const sortingPreference = await fetchSortingPreference(userId)
-        console.log(sortingPreference)
-        // tasksStore.sortingPreference = sortingPreference 
+        sortingPreference.value = sortingPreference 
       } catch (error) {
         console.error(error)
       }

@@ -6,13 +6,14 @@ import { useUserStore } from '@/stores/userStore'
 export const useTasksStore = defineStore('tasks', () => {
   // State
   const tasks = ref([]);
+  // operations should happen on a different array like "sortedTasks"
   const sortingOptions = [
-    { label: 'Active first (Default)', value: 'activeFirst' },
-    { label: 'Completed first', value: 'completedFirst' },
+    { label: 'Active first (Default)', value: 'id' },
+    { label: 'Completed first', value: 'completed' },
     { label: 'Oldest', value: 'oldest' },
     { label: 'Newest', value: 'newest' },
-    { label: 'Name A to Z', value: 'nameAToZ' },
-    { label: 'Name Z to A', value: 'nameZToA' }
+    { label: 'Name A to Z', value: 'a-first' },
+    { label: 'Name Z to A', value: 'z-first' }
   ];
   const sortingPreference = ref(localStorage.getItem('sortingPreference') || 'activeFirst');
 
@@ -25,7 +26,9 @@ export const useTasksStore = defineStore('tasks', () => {
 
   async function fetchAllTasks() {
     try {
-      const fetchedTasks = await fetchTasks();
+      const userStore = useUserStore()
+      const userId = userStore.user.id
+      const fetchedTasks = await fetchTasks(userId); // Pass userId to the fetchTasks function
       sortTasksByOption(fetchedTasks);
       tasks.value = fetchedTasks;
     } catch (error) {
@@ -33,14 +36,13 @@ export const useTasksStore = defineStore('tasks', () => {
     }
   }
 
-  async function createNewTask(task) {
-    const userStore = useUserStore()
-    const id = userStore.user.id
-
+  async function createNewTask(task) { // Accept userId as a parameter
     try {
-      await createTask({ ...task, user_id: id })
+      const userStore = useUserStore()
+      const userId = userStore.user.id
+      await createTask({ ...task, user_id: userId });
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
@@ -62,10 +64,10 @@ export const useTasksStore = defineStore('tasks', () => {
 
   function sortTasksByOption(tasks) {
     switch (sortingPreference.value) {
-      case 'activeFirst':
-        tasks.sort((a, b) => a.is_complete - b.is_complete);
+      case 'id':
+        tasks.sort((a, b) => a.id - b.id);
         break;
-      case 'completedFirst':
+      case 'completed':
         tasks.sort((a, b) => b.is_complete - a.is_complete);
         break;
       case 'oldest':
@@ -74,10 +76,10 @@ export const useTasksStore = defineStore('tasks', () => {
       case 'newest':
         tasks.sort((a, b) => new Date(b.inserted_at) - new Date(a.inserted_at));
         break;
-      case 'nameAToZ':
+      case 'a-first':
         tasks.sort((a, b) => a.title.localeCompare(b.title));
         break;
-      case 'nameZToA':
+      case 'z-first':
         tasks.sort((a, b) => b.title.localeCompare(a.title));
         break;
       default:
