@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
 import { storeToRefs } from 'pinia'
 import CreateTask from '@/components/CreateTask.vue'
