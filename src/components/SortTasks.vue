@@ -37,10 +37,11 @@
   const userStore = useUserStore();
 
   onMounted(() => {
-    const userId = userStore.user.id;
-    tasksStore.fetchAllTasks(userId);
-  }
-  );
+  const userId = userStore.user.id;
+  tasksStore.fetchAllTasks(userId);
+  // Set the initial value of selectedSort to the user's sorting preference
+  selectedSort.value = userStore.sortingPreference; // add this line
+});
 
   const selectedSort = ref(tasksStore.sortingPreference);
   const sortModal = ref(null);
