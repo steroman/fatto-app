@@ -49,26 +49,31 @@ const props = defineProps({
 })
 
 // Initialize a reactive reference to the task
-const task = ref(props.task)
 const editedTitle = ref('')
 const editModal = ref(null)
 
 // Function to toggle task completion status
 const _handleTaskCompletion = async () => {
-  task.value.is_complete = !task.value.is_complete
-  await tasksStore.updateExistingTask(task.value)
+  const taskToUpdate = {
+    ...props.task,
+    is_complete: !props.task.is_complete
+  }
+  await tasksStore.updateExistingTask(taskToUpdate)
 }
 
 // Function to open edit modal
 const _openEditModal = () => {
-  editedTitle.value = task.value.title
+  editedTitle.value = props.task.title
   editModal.value.showModal()
 }
 
 // Function to save edited title
 const _saveTitle = async () => {
-  task.value.title = editedTitle.value
-  await tasksStore.updateExistingTask(task.value)
+  const taskToUpdate = {
+    ...props.task,
+    title: editedTitle.value
+  }
+  await tasksStore.updateExistingTask(taskToUpdate)
   editModal.value.close()
 }
 
@@ -79,7 +84,7 @@ const _cancelEdit = () => {
 
 // Function to delete the task
 const _deleteTask = async () => {
-  await tasksStore.deleteExistingTask(task.value)
+  await tasksStore.deleteExistingTask(props.task)
   tasksStore.fetchAllTasks()
 }
 
@@ -89,7 +94,7 @@ const formatTimestamp = (timestamp) => {
 }
 
 const getIconClass = () => {
-  if (task.value.is_complete) {
+  if (props.task.is_complete) {
     return 'fa-check-circle text-green-500'
   } else {
     return 'fa-check-circle text-gray-500'
