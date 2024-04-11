@@ -12,13 +12,13 @@ import {
   fetchSortingPreference,
   updateSortingPreference
  } from '@/api/settingsApi'
-import { useTasksStore } from '@/stores/tasksStore'
 
 
 export const useUserStore = defineStore('user', {
   state: () => {
     // State
     const user = ref(null)
+    const sortingPreference = ref('')
     // Getters
 
     // Actions
@@ -72,18 +72,19 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function fetchUserSortingPreference(userId) {
+    async function fetchUserSortingPreference() {
       try {
-        const sortingPreference = await fetchSortingPreference(userId)
-        sortingPreference.value = sortingPreference 
+        const sortingPrefFetched = await fetchSortingPreference(user.value.id)
+        sortingPreference.value = sortingPrefFetched 
       } catch (error) {
         console.error(error)
       }
     }
 
-    async function updateUserSortingPreference(userId, sortingPreference) {
+    async function updateUserSortingPreference(newSortingPref) {
       try {
-        await updateSortingPreference(userId, sortingPreference)
+        const updatedSortingPref = await updateSortingPreference(user.value.id, newSortingPref)
+        sortingPreference.value = updatedSortingPref
       } catch (error) {
         console.error(error)
       }
@@ -92,6 +93,7 @@ export const useUserStore = defineStore('user', {
     return {
       // State
       user,
+      sortingPreference,
       // Getters
 
       // Actions

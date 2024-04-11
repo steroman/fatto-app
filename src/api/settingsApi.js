@@ -10,20 +10,20 @@ export const fetchSortingPreference = async (userId) => {
 
   if (error) {
     throw new Error(error.message)
-  } else {
-    const sortingPreferenceValue = data[0].sorting_preference
-    console.log(sortingPreferenceValue)
-    return sortingPreferenceValue
   }
+
+  return data[0].sorting_preference
 }
 
 export const updateSortingPreference = async (userId, sortingPreference) => {
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from(TABLE_NAME)
     .update({ sorting_preference: sortingPreference })
     .eq('user_id', userId)
+    .select()
 
     if (error) {
-    throw new Error(error.message)
+      throw new Error(error.message)
     }
+    return data[0].sorting_preference
 }
