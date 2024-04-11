@@ -3,7 +3,7 @@
       <!-- SortComponent -->
       <div class="hidden sm:block">
         <select v-model="selectedSort" @change="applySorting">
-          <option v-for="option in sortingOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
+          <option v-for="option in SORT_OPTIONS" :key="option.value" :value="option.value">{{ option.label }}</option>
         </select>
       </div>
       
@@ -13,7 +13,7 @@
         <dialog ref="sortModal" class="modal modal-bottom sm:modal-middle">
           <div class="modal-box">
             <h3 class="font-bold text-lg">Sorting Options</h3>
-            <div class="form-control" v-for="option in sortingOptions" :key="option.value">
+            <div class="form-control" v-for="option in SORT_OPTIONS" :key="option.value">
               <label class="label cursor-pointer">
                 <span class="label-text">{{ option.label }}</span>
                 <input type="radio" name="sortingOption" class="radio" :value="option.value" v-model="selectedSort" @change="applySorting" />
@@ -29,12 +29,21 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
-  import { useTasksStore } from '@/stores/tasksStore'
+  import { ref, onMounted } from 'vue'
+  import { useTasksStore, SORT_OPTIONS } from '@/stores/tasksStore'
+  import { useUserStore } from '@/stores/userStore'
   
   const tasksStore = useTasksStore();
+  const userStore = useUserStore();
+
+  onMounted(() => {
+  const userId = userStore.user.id;
+  tasksStore.fetchAllTasks(userId);
+  // Set the initial value of selectedSort to the user's sorting preference
+  selectedSort.value = userStore.sortingPreference; // add this line
+});
+
   const selectedSort = ref(tasksStore.sortingPreference);
-  const sortingOptions = tasksStore.sortingOptions;
   const sortModal = ref(null);
   
   const openModal = () => {
@@ -45,11 +54,9 @@
     sortModal.value.close();
   };
   
-  const applySorting = () => {
-    localStorage.setItem('sortingPreference', selectedSort.value);
-    tasksStore.sortingPreference = selectedSort.value;
-    tasksStore.fetchAllTasks();
-  };
+const applySorting = () => {
+  userStore.updateUserSortingPreference(selectedSort.value);
+};
   </script>
   
   <style scoped>
