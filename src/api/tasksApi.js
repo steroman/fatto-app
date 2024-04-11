@@ -13,18 +13,19 @@ export const fetchTasks = async () => {
 }
 
 export const createTask = async (task) => {
-  const { error } = await supabase.from(TABLE_NAME).insert(task)
+  const { data, error } = await supabase.from(TABLE_NAME).insert(task).select()
   if (error) {
     throw new Error(error.message)
   }
-  return true
+  return data[0]
 }
 
 export const updateTask = async (task) => {
-  const { error } = await supabase.from(TABLE_NAME).update(task).eq('id', task.id)
+  const { data, error } = await supabase.from(TABLE_NAME).update(task).eq('id', task.id).select()
   if (error) {
     throw new Error(error.message)
   }
+  return data[0]
 }
 
 export const deleteTask = async (task) => {
