@@ -6,9 +6,11 @@ const modalRef = ref(null)
 const inputValue = ref('')
 
 const _save = () => {
-  const newData = inputValue.value
-  emit('save', newData)
-}
+  const newData = inputValue.value;
+  console.log("Save button clicked. New data:", newData); // Add this line
+  emit('save', newData);
+};
+
 
 const _cancel = () => {
   emit('cancel')

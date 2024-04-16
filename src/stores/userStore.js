@@ -63,12 +63,19 @@ export const useUserStore = defineStore('user', {
     }
 
     async function updateUserData(userData) {
+      console.log("Updating user data:", userData);
       try {
-        user.value = await updateUser(userData)
+        const response = await updateUser(userData);
+        console.log("Update user response:", response);
+        // Assuming response contains the updated user object
+        user.value = response.user;
+        displayName.value = user.value?.user_metadata?.display_name || ''
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     }
+    
+    
 
     async function resetPassword(email) {
       try {

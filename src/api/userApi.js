@@ -22,7 +22,6 @@ export const login = async (email, password) => {
   if (error) {
     throw new Error(error.message)
   } else {
-    // console.log(data)
     return data.user
   }
 }
@@ -32,7 +31,6 @@ export const seeCurrentUser = async () => {
   if (error) {
     throw new Error(error.message)
   } else {
-    // console.log(data)
     return data.session?.user
   }
 }
@@ -42,7 +40,6 @@ export const logout = async () => {
   if (error) {
     throw new Error(error.message)
   } else {
-    // console.log('logged out')
     return undefined
   }
 }
@@ -54,20 +51,18 @@ export const resetPassWithEmail = async (email) => {
   if (error) {
     throw new Error(error.message)
   } else {
-    // console.log('ResetPassWithEmail data -->', data)
     return data
   }
 }
 
 export const updateUser = async (userData) => {
-  const { data, error } = await supabase.auth.updateUser(userData)
+  const { data, error } = await supabase.auth.updateUser(userData);
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   } else {
-    return data
+    return data;
   }
-}
-
+};
 // export const changePass = async (oldPass, newPass, userId) => {
 //   const result = await supabase.rpc('changepassword', {'current_plain_password': oldPass, 'new_plain_password': newPass, 'current_id': userId});
 

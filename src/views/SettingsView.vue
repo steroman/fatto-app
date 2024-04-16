@@ -13,7 +13,8 @@ const isVisible = ref(false)
 const newName = ref('')
 
 const showEditModal = () => {
-  isVisible.value = true // Update isVisible to show the modal when the "Change" button is clicked
+  isVisible.value = true
+  newName.value = displayName.value
 }
 
 const { hideCompletedSetting } = storeToRefs(userStore)
@@ -24,9 +25,15 @@ const logOut = async () => {
   router.push('/login')
 }
 
-const updateUserName = () => {
-  userStore.updateUserName(newName.value)
-  isVisible.value = false // Update isVisible to hide the modal when changes are saved
+const updatePassword = async () => {
+  await userStore.updateUserData({ password: form.password })
+  // confirmationSent.value = true
+}
+
+const updateName = async (newName) => {
+  await userStore.updateUserData({ data: {
+    display_name: newName }})
+  isVisible.value = false
 }
 
 // Listen for the 'cancel' event emitted by EditModal and handle it
@@ -34,15 +41,14 @@ const cancelEditModal = () => {
   isVisible.value = false // Update isVisible to hide the modal when canceled
 }
 
-const _handleChangePass = async () => {
-  try {
-    await userStore.changePassword('123456', '1234567')
-    alert('Password changed successfully')
-  } catch(err) {
-    console.error(err)
-  }
-}
-
+// const _handleChangePass = async () => {
+//   try {
+//     await userStore.changePassword('1234567890', '123456')
+//     alert('Password changed successfully')
+//   } catch(err) {
+//     console.error(err)
+//   }
+// }
 </script>
 
 <template>
@@ -71,54 +77,60 @@ const _handleChangePass = async () => {
         <h2 class="text-2xl font-medium">Account</h2>
         <p class="text-gray-600">Update your information</p>
         <div>
-        <p class="py-2 text-xl font-semibold">Name</p>
-        <div class="flex items-center justify-between mb-4">
-          <p class="text-gray-600">{{ displayName }}</p>
-          <button @click="showEditModal()" class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2">
-            Change
-          </button>
+          <p class="py-2 text-xl font-semibold">Name</p>
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-gray-600">{{ displayName }}</p>
+            <button
+              @click="showEditModal()"
+              class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2"
+            >
+              Change
+            </button>
+          </div>
         </div>
-      </div>
-      <EditModal
-    :isVisible="isVisible"
-    modalTitle="Edit Name"
-    inputPlaceholder="Enter new name"
-    saveButtonLabel="Save"
-    cancelButtonLabel="Cancel"
-    :defaultValue="displayName"
-    @save="updateUserName"
-    @cancel="cancelEditModal"
-  />
-
-
+        <EditModal
+          :isVisible="isVisible"
+          modalTitle="Edit Name"
+          inputPlaceholder="Enter new name"
+          saveButtonLabel="Save"
+          cancelButtonLabel="Cancel"
+          :defaultValue="displayName"
+          :value="newName"
+          @input="newName = $event.target.value"
+          @save="updateName"
+          @cancel="cancelEditModal"
+        />
 
         <div>
-        <p class="py-2 text-xl font-semibold">Email Address</p>
-        <div class="flex items-center justify-between mb-4">
-          <p class="text-gray-600">{{ user.email }}</p>
-          <button class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2">
-            Change
-          </button>
+          <p class="py-2 text-xl font-semibold">Email Address</p>
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-gray-600">{{ user.email }}</p>
+            <button class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2">
+              Change
+            </button>
+          </div>
+          <div>
+            <p class="py-2 text-xl font-semibold">Password</p>
+            <div class="flex items-center justify-between mb-4">
+              <p class="text-gray-600">sahukjdkjashdhg</p>
+              <button
+                @click="_handleChangePass"
+                class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2"
+              >
+                Change
+              </button>
+            </div>
+          </div>
         </div>
         <div>
-        <p class="py-2 text-xl font-semibold">Password</p>
-        <div class="flex items-center justify-between mb-4">
-          <p class="text-gray-600">sahukjdkjashdhg</p>
-          <button @click="_handleChangePass" class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2">
-            Change
-          </button>
+          <p class="py-2 text-xl font-semibold">Email Address</p>
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-gray-600">{{ user.email }}</p>
+            <button class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2">
+              Change
+            </button>
+          </div>
         </div>
-      </div>
-      </div>
-              <div>
-        <p class="py-2 text-xl font-semibold">Email Address</p>
-        <div class="flex items-center justify-between mb-4">
-          <p class="text-gray-600">{{ user.email }}</p>
-          <button class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2">
-            Change
-          </button>
-        </div>
-      </div>
       </div>
       <div class="divider"></div>
       <div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
@@ -135,7 +147,6 @@ const _handleChangePass = async () => {
         />
         <label for="hideCompleted" class="text-lg cursor-pointer">Hide completed tasks</label>
       </div>
-      <!-- Add more settings elements here -->
     </div>
   </main>
 </template>
