@@ -6,7 +6,8 @@ import {
   seeCurrentUser,
   logout,
   updateUser,
-  resetPassWithEmail
+  resetPassWithEmail,
+  changePass
 } from '@/api/userApi'
 import {
   fetchSortingPreference,
@@ -22,6 +23,7 @@ export const useUserStore = defineStore('user', {
     const user = ref(null)
     const sortingPreference = ref('')
     const hideCompletedSetting = ref(null)
+    const displayName = ref('')
     // Getters
 
     // Actions
@@ -46,6 +48,7 @@ export const useUserStore = defineStore('user', {
     async function seeUser() {
       try {
         user.value = await seeCurrentUser()
+        displayName.value = user.value?.user_metadata?.display_name || ''
       } catch (error) {
         console.error(error)
       }
@@ -111,11 +114,16 @@ export const useUserStore = defineStore('user', {
       }
     }
 
+    async function changePassword(oldPass, newPass) {
+      await changePass(oldPass, newPass, user.value.id)
+    }
+
     return {
       // State
       user,
       sortingPreference,
       hideCompletedSetting,
+      displayName,
       // Getters
 
       // Actions
@@ -128,7 +136,8 @@ export const useUserStore = defineStore('user', {
       fetchUserSortingPreference,
       updateUserSortingPreference,
       fetchUserHideCompletedSetting,
-      updateUserHideCompletedSetting
+      updateUserHideCompletedSetting,
+      changePassword
     }
   },
   persist: {

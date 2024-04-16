@@ -23,7 +23,7 @@ onMounted(async () => {
 
 <template>
   <main class="container mx-auto">
-    <h1 class="text-3xl font-semibold mb-4">Your tasks</h1>
+    <h1 class="text-3xl font-semibold mb-4">{{ userStore.displayName }}'s tasks</h1>
     <template v-if="user">
       <CreateTask />
     </template>

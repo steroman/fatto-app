@@ -71,3 +71,11 @@ export const updateUser = async (user) => {
     return data
   }
 }
+
+export const changePass = async (oldPass, newPass, userId) => {
+  const result = await supabase.rpc('changepassword', {'current_plain_password': oldPass, 'new_plain_password': newPass, 'current_id': userId});
+
+  if (result === 'incorrect') {
+    throw new Error('Incorrect password')
+  }
+}
