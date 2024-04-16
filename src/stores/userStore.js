@@ -6,8 +6,8 @@ import {
   seeCurrentUser,
   logout,
   updateUser,
-  resetPassWithEmail,
-  changePass
+  resetPassWithEmail
+  // changePass
 } from '@/api/userApi'
 import {
   fetchSortingPreference,
@@ -62,9 +62,9 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function updateUserPassword(password) {
+    async function updateUserData(userData) {
       try {
-        user.value = await updateUser({ password })
+        user.value = await updateUser(userData)
       } catch (error) {
         console.error(error)
       }
@@ -114,9 +114,9 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function changePassword(oldPass, newPass) {
-      await changePass(oldPass, newPass, user.value.id)
-    }
+    // async function changePassword(oldPass, newPass) {
+    //   await changePass(oldPass, newPass, user.value.id)
+    // }
 
     return {
       // State
@@ -131,13 +131,13 @@ export const useUserStore = defineStore('user', {
       signIn,
       seeUser,
       signOut,
-      updateUserPassword,
+      updateUserData,
       resetPassword,
       fetchUserSortingPreference,
       updateUserSortingPreference,
       fetchUserHideCompletedSetting,
-      updateUserHideCompletedSetting,
-      changePassword
+      updateUserHideCompletedSetting
+      // changePassword
     }
   },
   persist: {

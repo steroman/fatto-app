@@ -29,7 +29,7 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, form)
 
 const updatePassword = async () => {
-  await userStore.updateUserPassword(form.password)
+  await userStore.updateUserData({ password: form.password })
   confirmationSent.value = true
 }
 
