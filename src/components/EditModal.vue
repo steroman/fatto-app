@@ -22,7 +22,8 @@ const props = defineProps({
   inputPlaceholder: String,
   saveButtonLabel: String,
   cancelButtonLabel: String,
-  defaultValue: String
+  defaultValue: String,
+  type: String
 })
 
 inputValue.value = props.defaultValue
@@ -47,7 +48,7 @@ onMounted(() => {
     <!-- Modal content -->
     <div class="modal-box">
       <h3 class="font-bold text-lg">{{ props.modalTitle }}</h3>
-      <input v-model="inputValue" type="text" class="input my-4" :placeholder="props.inputPlaceholder">
+      <input v-model="inputValue" :type="props.type" class="input my-4" :placeholder="props.inputPlaceholder">
       <div class="modal-action">
         <button @click="_save" class="btn mr-2">{{ props.saveButtonLabel }}</button>
         <button @click="_cancel" class="btn btn-ghost">{{ props.cancelButtonLabel }}</button>
