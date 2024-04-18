@@ -23,12 +23,12 @@ const showNameModal = () => {
 
 const showPasswordModal = () => {
   isPasswordModalVisible.value = true
-  newPassword.value = '' // Clear any previously entered password
+  newPassword.value = ''
 }
 
 const showEmailModal = () => {
   isEmailModalVisible.value = true
-  newEmail.value = '' // Clear any previously entered password
+  newEmail.value = user.value.email
 }
 
 const { hideCompletedSetting } = storeToRefs(userStore)
@@ -55,9 +55,10 @@ const updateName = async (newName) => {
 }
 
 const updateEmail = async (newEmail) => {
+  console.log("New email:", newEmail);
   await userStore.updateUserData({ email: newEmail })
   isEmailModalVisible.value = false
-    }
+}
 
 // Listen for the 'cancel' event emitted by EditModal and handle it
 const cancelEditModal = () => {

@@ -56,17 +56,11 @@ export const resetPassWithEmail = async (email) => {
 }
 
 export const updateUser = async (userData) => {
+  
   const { data, error } = await supabase.auth.updateUser(userData);
   if (error) {
     throw new Error(error.message);
   } else {
     return data;
   }
-};
-// export const changePass = async (oldPass, newPass, userId) => {
-//   const result = await supabase.rpc('changepassword', {'current_plain_password': oldPass, 'new_plain_password': newPass, 'current_id': userId});
-
-//   if (result === 'incorrect') {
-//     throw new Error('Incorrect password')
-//   }
-// }
+}
