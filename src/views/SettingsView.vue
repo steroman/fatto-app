@@ -104,7 +104,7 @@ const cancelEditModal = () => {
         <div>
           <p class="py-2 text-xl font-semibold">Name</p>
           <div class="flex items-center justify-between mb-4">
-            <p class="text-gray-600">{{ displayName }}</p>
+            <p class="text-gray-600">{{ displayName ? displayName : '-' }}</p>
             <button
               @click="showNameModal()"
               class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2"
@@ -136,12 +136,16 @@ const cancelEditModal = () => {
           </div>
         </div>
       </div>
-      <div class="divider"></div>
-      <div class="grid h-20 card bg-base-300 rounded-box place-items-center">content</div>
     </div>
-    <button @click="logOut()" class="btn btn-danger">Logout</button>
-    <div class="mt-8">
+    <div class="divider"></div>
+    <div  class="flex flex-col w-full">
+      <div>
+        <h2 class="text-2xl font-medium">Appearance</h2>
+        <p class="text-gray-600">Customise what tasks you see</p>
+        </div>
+        <div class="mt-8">
       <div class="flex items-center mb-4">
+        <label for="hideCompleted" class="text-gray-600 cursor-pointer">Hide completed tasks</label>
         <input
           type="checkbox"
           class="toggle toggle-accent mr-2"
@@ -149,9 +153,13 @@ const cancelEditModal = () => {
           v-model="newHideCompletedSetting"
           @change="userStore.updateUserHideCompletedSetting(newHideCompletedSetting)"
         />
-        <label for="hideCompleted" class="text-lg cursor-pointer">Hide completed tasks</label>
       </div>
     </div>
+    </div>
+    <div class="divider"></div>
+    <div class="flex flex-col w-full"><button @click="logOut()" class="btn btn-danger">Logout</button>
+</div>
+
     <!-- Name modal -->
 
     <EditModal
