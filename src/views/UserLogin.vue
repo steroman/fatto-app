@@ -10,10 +10,6 @@ const router = useRouter()
 
 const userStore = useUserStore()
 
-// const signIn = () => {
-//   userStore.signIn(form.email, form.password)
-// }
-
 const errorMessage = ref('')
 
 const form = reactive({
@@ -23,10 +19,9 @@ const form = reactive({
 
 const rules = computed(() => {
   return {
-    // name: { required }, // Name is required
     email: {
-      required, // Email is required
-      email // Must be a valid email address
+      required,
+      email
     },
     password: { required } // Password is required
   }
@@ -42,6 +37,8 @@ const signInAndRedirect = async () => {
     if (error.message === 'Email not confirmed') {
       errorMessage.value = 'This email isn\'t verified yet. Check your inbox and try to login again.'
       resetErrorMessageAfterDelay(3000) // 3000 milliseconds (3 seconds)
+    } else if (error.message === 'Invalid login credentials') {
+      errorMessage.value = 'Invalid email or password. Try again.'
     } else {
       errorMessage.value = 'An error occurred. Please try again.'
       resetErrorMessageAfterDelay(3000) // 3000 milliseconds (3 seconds)
