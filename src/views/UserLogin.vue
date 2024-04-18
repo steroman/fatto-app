@@ -15,7 +15,7 @@ const formIsValid = ref(true) // Track the form validity
 
 const form = reactive({
   email: '',
-  password: '',
+  password: ''
 })
 
 const rules = computed(() => {
@@ -61,8 +61,9 @@ async function handleSubmit() {
   formIsValid.value = result // Update form validity
   if (!result) {
     // If there are errors in the form, show an alert indicating that the form is invalid
-formIsValid.value = false
-  } else {   // If the form is valid, perform some action with the form data
+    formIsValid.value = false
+  } else {
+    // If the form is valid, perform some action with the form data
     signInAndRedirect()
   }
 }
@@ -74,17 +75,21 @@ formIsValid.value = false
     <form class="mt-4" @submit.prevent="handleSubmit">
       <div class="mb-4">
         <label for="email" class="block">Email *</label>
-        <input type="text" id="email" v-model="form.email" class="w-full border p-2">
-        <span v-if="v$.email.$error"><p class="text-red-500 text-sm">{{ v$.email.$errors[0].$message }}</p></span>
+        <input type="text" id="email" v-model="form.email" class="w-full border p-2" />
+        <span v-if="v$.email.$error" class="block text-red-500 text-sm"
+          >{{ v$.email.$errors[0].$message }}</span
+        >
       </div>
       <div class="mb-4">
         <label for="password" class="block">Password *</label>
-        <input type="password" id="password" v-model="form.password" class="w-full border p-2">
-        <span v-if="v$.password.$error" class="block"><p class="text-red-500 text-sm">{{ v$.password.$errors[0].$message }}</p></span>
+        <input type="password" id="password" v-model="form.password" class="w-full border p-2" />
+        <span v-if="v$.password.$error"
+        class="block text-red-500 text-sm">{{ v$.password.$errors[0].$message }}</span
+        >
       </div>
       <button type="submit" class="bg-blue-500 text-white px-4 py-2">Log in</button>
       <!-- Display error message if form has errors -->
-      <p v-if="!formIsValid" class="text-red-500 text-sm">Fix the errors and try again</p>
+      <span v-if="!formIsValid" class="block text-red-500 text-sm">Fix the errors and try again</span>
     </form>
     <div class="toast toast-top toast-center" v-if="errorMessage">
       <div class="toast-container">
@@ -93,8 +98,10 @@ formIsValid.value = false
         </transition>
       </div>
     </div>
-    <p class="mt-4">Don't have an account? <router-link to="/signup" class="text-blue-500">Sign up</router-link></p>
-    <p><router-link to="/forgot-password" class="text-blue-500">Forgot password?</router-link></p>
+    <p class="mt-4">
+      No account? <router-link to="/signup" class="text-blue-500">Sign up</router-link>
+    </p>
+    <p>Forgot password? <router-link to="/forgot-password" class="text-blue-500">Reset it</router-link></p>
   </div>
 </template>
 
@@ -111,12 +118,13 @@ formIsValid.value = false
   z-index: 50; /* Ensure the toast appears above other content */
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s; /* Smooth transition for opacity change */
 }
 
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0; /* Start with 0 opacity during enter and leave transitions */
 }
-
 </style>
