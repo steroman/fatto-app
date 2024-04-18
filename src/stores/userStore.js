@@ -7,6 +7,7 @@ import {
   logout,
   updateUser,
   resetPassWithEmail
+  // changePass
 } from '@/api/userApi'
 import {
   fetchSortingPreference,
@@ -22,6 +23,7 @@ export const useUserStore = defineStore('user', {
     const user = ref(null)
     const sortingPreference = ref('')
     const hideCompletedSetting = ref(null)
+    const displayName = ref('')
     // Getters
 
     // Actions
@@ -46,6 +48,7 @@ export const useUserStore = defineStore('user', {
     async function seeUser() {
       try {
         user.value = await seeCurrentUser()
+        displayName.value = user.value?.user_metadata?.display_name || ''
       } catch (error) {
         console.error(error)
       }
@@ -59,13 +62,20 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function updateUserPassword(password) {
+    async function updateUserData(userData) {
+      console.log("Updating user data:", userData);
       try {
-        user.value = await updateUser({ password })
+        const response = await updateUser(userData);
+        console.log("Update user response:", response);
+        // Assuming response contains the updated user object
+        user.value = response.user;
+        displayName.value = user.value?.user_metadata?.display_name || ''
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     }
+    
+    
 
     async function resetPassword(email) {
       try {
@@ -111,11 +121,16 @@ export const useUserStore = defineStore('user', {
       }
     }
 
+    // async function changePassword(oldPass, newPass) {
+    //   await changePass(oldPass, newPass, user.value.id)
+    // }
+
     return {
       // State
       user,
       sortingPreference,
       hideCompletedSetting,
+      displayName,
       // Getters
 
       // Actions
@@ -123,12 +138,13 @@ export const useUserStore = defineStore('user', {
       signIn,
       seeUser,
       signOut,
-      updateUserPassword,
+      updateUserData,
       resetPassword,
       fetchUserSortingPreference,
       updateUserSortingPreference,
       fetchUserHideCompletedSetting,
       updateUserHideCompletedSetting
+      // changePassword
     }
   },
   persist: {
