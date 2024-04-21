@@ -1,3 +1,62 @@
+<script setup>
+import { useUserStore } from '@/stores/userStore'
+import { useVuelidate } from '@vuelidate/core'
+import { required, email, sameAs } from '@vuelidate/validators'
+import { ref, reactive, computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const userStore = useUserStore()
+const router = useRouter()
+
+const form = reactive({
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+})
+
+// Define form validation rules
+const rules = computed(() => {
+  return {
+    email: { required, email }, // Email is required and must be a valid email address
+    password: { required }, // Password is required
+    confirmPassword: { required, sameAsPassword: sameAs(form.password) } // Password confirmation is required
+  }
+})
+
+// Initialize vuelidate with form and rules
+const v$ = useVuelidate(rules, form)
+
+// Initialize confirmationSent flag
+const confirmationSent = ref(false)
+
+const formIsValid = ref(true) // Track the form validity
+// Function to handle sign-up submission
+async function handleSubmit() {
+  // Validate the form fields
+  const result = await v$.value.$validate()
+  formIsValid.value = result // Update form validity
+  if (!result) {
+    // If there are errors in the form, show an alert indicating that the form is invalid
+    formIsValid.value = false
+  } else {
+    // If the form is valid, perform some action with the form data
+    await signUp()
+  }
+}
+
+// Function to sign up the user
+async function signUp() {
+  await userStore.createUser(form.email, form.password, form.name)
+  confirmationSent.value = true
+}
+
+// Function to redirect to the home page
+function redirectToHome() {
+  router.push('/')
+}
+</script>
+
 <template>
   <div class="container mx-auto">
     <!-- Sign-up form -->
@@ -58,64 +117,5 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { useUserStore } from '@/stores/userStore'
-import { useVuelidate } from '@vuelidate/core'
-import { required, email, sameAs } from '@vuelidate/validators'
-import { ref, reactive, computed } from 'vue'
-import { useRouter } from 'vue-router'
-
-const userStore = useUserStore()
-const router = useRouter()
-
-const form = reactive({
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: ''
-})
-
-// Define form validation rules
-const rules = computed(() => {
-  return {
-    email: { required, email }, // Email is required and must be a valid email address
-    password: { required }, // Password is required
-    confirmPassword: { required, sameAsPassword: sameAs(form.password) } // Password confirmation is required
-  }
-})
-
-// Initialize vuelidate with form and rules
-const v$ = useVuelidate(rules, form)
-
-// Initialize confirmationSent flag
-const confirmationSent = ref(false)
-
-const formIsValid = ref(true) // Track the form validity
-// Function to handle sign-up submission
-async function handleSubmit() {
-  // Validate the form fields
-  const result = await v$.value.$validate()
-  formIsValid.value = result // Update form validity
-  if (!result) {
-    // If there are errors in the form, show an alert indicating that the form is invalid
-    formIsValid.value = false
-  } else {
-    // If the form is valid, perform some action with the form data
-    await signUp()
-  }
-}
-
-// Function to sign up the user
-async function signUp() {
-  await userStore.createUser(form.email, form.password, form.name)
-  confirmationSent.value = true
-}
-
-// Function to redirect to the home page
-function redirectToHome() {
-  router.push('/')
-}
-</script>
 
 <style scoped></style>
