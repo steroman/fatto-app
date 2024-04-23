@@ -10,23 +10,20 @@ const router = useRouter()
 
 const userStore = useUserStore()
 
-// const signIn = () => {
-//   userStore.signIn(form.email, form.password)
-// }
-
 const errorMessage = ref('')
+const formIsValid = ref(true) // Track the form validity
 
 const form = reactive({
   email: '',
-  password: '',
+  password: ''
 })
 
 const rules = computed(() => {
   return {
-    // name: { required }, // Name is required
     email: {
-      required, // Email is required
-      email // Must be a valid email address
+      required,
+      email,
+      $rewardearly: true
     },
     password: { required } // Password is required
   }
@@ -40,11 +37,14 @@ const signInAndRedirect = async () => {
     router.push('/tasks')
   } catch (error) {
     if (error.message === 'Email not confirmed') {
-      errorMessage.value = 'This email isn\'t verified yet. Check your inbox and try to login again.'
-      resetErrorMessageAfterDelay(3000) // 3000 milliseconds (3 seconds)
+      errorMessage.value = 'Email not verified. Verify it and try again.'
+      resetErrorMessageAfterDelay(5000)
+    } else if (error.message === 'Invalid login credentials') {
+      errorMessage.value = 'Invalid credentials. Try again.'
+      resetErrorMessageAfterDelay(5000)
     } else {
       errorMessage.value = 'An error occurred. Please try again.'
-      resetErrorMessageAfterDelay(3000) // 3000 milliseconds (3 seconds)
+      resetErrorMessageAfterDelay(5000)
     }
   }
 }
@@ -58,42 +58,51 @@ function resetErrorMessageAfterDelay(delay) {
 async function handleSubmit() {
   // Validate the form fields
   const result = await v$.value.$validate()
+  formIsValid.value = result // Update form validity
   if (!result) {
     // If there are errors in the form, show an alert indicating that the form is invalid
-    alert('The form has errors')
-    
-  } else {   // If the form is valid, perform some action with the form data
+    formIsValid.value = false
+  } else {
+    // If the form is valid, perform some action with the form data
     signInAndRedirect()
   }
 }
-
 </script>
+
 <template>
-    <div class="container mx-auto">
-        <h1 class="text-2xl font-semibold mt-8">Log in to DoToo</h1>
-        <form class="mt-4" @submit.prevent="handleSubmit">
-        <div class="mb-4">
-            <label for="email" class="block">Email *</label>
-            <input type="text" id="email" v-model="form.email" class="w-full border p-2">
-            <span v-if="v$.email.$error">{{ v$.email.$errors[0].$message }}</span>
-        </div>
-        <div class="mb-4">
-            <label for="password" class="block">Password *</label>
-            <input type="password" id="password" v-model="form.password" class="w-full border p-2">
-            <span v-if="v$.password.$error" class="block"> {{ v$.password.$errors[0].$message }}</span>
-        </div>
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2">Log in</button>
-        </form>
-        <div class="toast toast-top toast-center" v-if="errorMessage">
-          <div class="toast-container">
-      <transition name="fade">
-        <ToastComponent :errorMessage="errorMessage" />
-      </transition>
+  <div class="container mx-auto">
+    <h1 class="text-2xl font-semibold mt-8">Log in to DoToo</h1>
+    <form class="mt-4" @submit.prevent="handleSubmit">
+      <div class="mb-4">
+        <label for="email" class="block">Email *</label>
+        <input type="text" id="email" v-model="form.email" class="w-full border p-2" />
+        <span v-if="v$.email.$error" class="block text-red-500 text-sm"
+          >{{ v$.email.$errors[0].$message }}</span
+        >
+      </div>
+      <div class="mb-4">
+        <label for="password" class="block">Password *</label>
+        <input type="password" id="password" v-model="form.password" class="w-full border p-2" />
+        <span v-if="v$.password.$error"
+        class="block text-red-500 text-sm">{{ v$.password.$errors[0].$message }}</span
+        >
+      </div>
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2">Log in</button>
+      <!-- Display error message if form has errors -->
+      <span v-if="!formIsValid" class="block text-red-500 text-sm">Fix the errors and try again</span>
+    </form>
+    <div class="toast toast-top toast-center" v-if="errorMessage">
+      <div class="toast-container">
+        <transition name="fade">
+          <ToastComponent :errorMessage="errorMessage" />
+        </transition>
+      </div>
     </div>
-    </div>
-        <p class="mt-4">Don't have an account? <router-link to="/signup" class="text-blue-500">Sign up</router-link></p>
-        <p><router-link to="/forgot-password" class="text-blue-500">Forgot password?</router-link></p>
-    </div>
+    <p class="mt-4">
+      No account? <router-link to="/signup" class="text-blue-500">Sign up</router-link>
+    </p>
+    <p>Forgot password? <router-link to="/forgot-password" class="text-blue-500">Reset it</router-link></p>
+  </div>
 </template>
 
 <style scoped>
@@ -109,12 +118,13 @@ async function handleSubmit() {
   z-index: 50; /* Ensure the toast appears above other content */
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s; /* Smooth transition for opacity change */
 }
 
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0; /* Start with 0 opacity during enter and leave transitions */
 }
-
 </style>

@@ -1,5 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required, email, minLength } from '@vuelidate/validators'
+import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
@@ -7,73 +9,139 @@ import EditModal from '@/components/EditModal.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
-const { user, displayName } = storeToRefs(userStore)
+const { user, displayName, hideCompletedSetting } = storeToRefs(userStore)
 
-const isNameModalVisible = ref(false)
-const isPasswordModalVisible = ref(false)
-const isEmailModalVisible = ref(false)
-const newName = ref('')
-const newPassword = ref('')
-const newEmail = ref('')
+let v$ = null
+const _modalData = {
+  name: {
+    title: 'Update name',
+    placeholder: 'Enter new name',
+    type: 'text',
+  },
+  email: {
+    title: 'Update email',
+    placeholder: 'Enter new email',
+    type: 'email',
+  },
+  password: {
+    title: 'Update password',
+    placeholder: 'Enter new password',
+    type: 'password',
+    helperText: 'Password must be at least 6 characters',
+  }
+}
+
+const newHideCompletedSetting = ref(hideCompletedSetting.value)
+
+const form = ref({
+  name: '',
+  email: '',
+  password: ''
+})
+const inputValidationSelected = ref('')
+const hasSavedData = ref(false)
+const formIsValid = ref(true) // Track the form validity
+const modalVisibleType = ref(null)
+const inputErrorMessage = ref(null)
+
+const rules = computed(() => {
+  if (inputValidationSelected.value === 'email') {
+    return {
+      email: { required, email }
+    }
+  }
+
+  if (inputValidationSelected.value === 'password') {
+    return {
+      password: { required, minLength: minLength(6) }
+    }
+  }
+
+  return {}
+})
+
+async function _handleInputSubmit(newValue, inputType) {
+  inputValidationSelected.value = inputType
+  v$ = useVuelidate(rules, form)
+
+  hasSavedData.value = true
+
+  await validateInput(newValue, inputType)
+
+  if (formIsValid.value) {
+    await updateUserInfo(form.value[inputType], inputType)
+  }
+}
+
+const validateInput = async (newValue, inputType) => {
+  form.value[inputType] = newValue
+
+  if (hasSavedData.value) {
+    const result = await v$?.value.$validate()
+    formIsValid.value = result // Update form validity
+    if (!result) {
+      inputErrorMessage.value = v$?.value[inputType]
+        ? v$?.value[inputType].$error
+          ? v$?.value[inputType].$errors[0].$message
+          : ''
+        : ''
+      formIsValid.value = false
+      return
+    }
+
+    inputErrorMessage.value = ''
+    formIsValid.value = true
+  }
+}
 
 const showNameModal = () => {
-  isNameModalVisible.value = true
-  newName.value = displayName.value
+  modalVisibleType.value = 'name'
+  form.value.name = displayName.value
 }
 
 const showPasswordModal = () => {
-  isPasswordModalVisible.value = true
-  newPassword.value = ''
+  modalVisibleType.value = 'password'
 }
 
 const showEmailModal = () => {
-  isEmailModalVisible.value = true
-  newEmail.value = user.value.email
+  modalVisibleType.value = 'email'
+  form.value.email = user.value.email
 }
-
-const { hideCompletedSetting } = storeToRefs(userStore)
-const newHideCompletedSetting = ref(hideCompletedSetting.value)
 
 const logOut = async () => {
   await userStore.signOut()
   router.push('/login')
 }
 
-const updatePassword = async (newPassword) => {
-  await userStore.updateUserData({ password: newPassword })
-  isPasswordModalVisible.value = false
-  // confirmationSent.value = true
-}
+const updateUserInfo = async (newValue, inputType) => {
+  try {
+    let newData = {}
 
-const updateName = async (newName) => {
-  await userStore.updateUserData({
-    data: {
-      display_name: newName
+    if (inputType === 'email') {
+      newData = { email: newValue }
+    } else if (inputType === 'name') {
+      newData = { data: { display_name: newValue } }
+    } else if (inputType === 'password') {
+      newData = { password: newValue }
     }
-  })
-  isNameModalVisible.value = false
-}
 
-const updateEmail = async (newEmail) => {
-  console.log("New email:", newEmail);
-  await userStore.updateUserData({ email: newEmail })
-  isEmailModalVisible.value = false
+    await userStore.updateUserData(newData)
+    modalVisibleType.value = null
+    hasSavedData.value = false
+
+    form.value[inputType] = ''
+    inputErrorMessage.value = ''
+    formIsValid.value = true
+  } catch (err) {
+    inputErrorMessage.value = err.message
+    formIsValid.value = false
+  }
 }
 
 // Listen for the 'cancel' event emitted by EditModal and handle it
 const cancelEditModal = () => {
-  isNameModalVisible.value = false
-  isPasswordModalVisible.value = false
-  isEmailModalVisible.value = false
+  modalVisibleType.value = null
 }
-// const _handleChangePass = async () => {
-//   try {
-//     await userStore.changePassword('1234567890', '123456')
-//     alert('Password changed successfully')
-//   } catch(err) {
-//     console.error(err)
-//   }
-// }
 </script>
 
 <template>
@@ -118,7 +186,10 @@ const cancelEditModal = () => {
           <p class="py-2 text-xl font-semibold">Email Address</p>
           <div class="flex items-center justify-between mb-4">
             <p class="text-gray-600">{{ user.email }}</p>
-            <button @click="showEmailModal()" class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2">
+            <button
+              @click="showEmailModal()"
+              class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2"
+            >
               Change
             </button>
           </div>
@@ -138,74 +209,44 @@ const cancelEditModal = () => {
       </div>
     </div>
     <div class="divider"></div>
-    <div  class="flex flex-col w-full">
+    <div class="flex flex-col w-full">
       <div>
         <h2 class="text-2xl font-medium">Appearance</h2>
         <p class="text-gray-600">Customise what tasks you see</p>
+      </div>
+      <div class="mt-8">
+        <div class="flex items-center mb-4">
+          <label for="hideCompleted" class="text-gray-600 cursor-pointer"
+            >Hide completed tasks</label
+          >
+          <input
+            type="checkbox"
+            class="toggle toggle-accent mr-2"
+            id="hideCompleted"
+            v-model="newHideCompletedSetting"
+            @change="userStore.updateUserHideCompletedSetting(newHideCompletedSetting)"
+          />
         </div>
-        <div class="mt-8">
-      <div class="flex items-center mb-4">
-        <label for="hideCompleted" class="text-gray-600 cursor-pointer">Hide completed tasks</label>
-        <input
-          type="checkbox"
-          class="toggle toggle-accent mr-2"
-          id="hideCompleted"
-          v-model="newHideCompletedSetting"
-          @change="userStore.updateUserHideCompletedSetting(newHideCompletedSetting)"
-        />
       </div>
     </div>
-    </div>
     <div class="divider"></div>
-    <div class="flex flex-col w-full"><button @click="logOut()" class="btn btn-danger">Logout</button>
-</div>
-
-    <!-- Name modal -->
-
-    <EditModal
-      v-if="isNameModalVisible"
-      :isVisible="isNameModalVisible"
-      modalTitle="Update name"
-      inputPlaceholder="Enter new name"
-      type="text"
-      saveButtonLabel="Save"
-      cancelButtonLabel="Cancel"
-      :defaultValue="displayName"
-      :value="newName"
-      @input="newName = $event.target.value"
-      @save="updateName"
-      @cancel="cancelEditModal"
-    />
-
-    <!-- Password modal -->
-    <EditModal
-      v-if="isPasswordModalVisible"
-      :isVisible="isPasswordModalVisible"
-      modalTitle="Update password"
-      inputPlaceholder="Enter new password"
-      type="password"
-      saveButtonLabel="Save"
-      cancelButtonLabel="Cancel"
-      :value="newPassword"
-      @input="newPassword = $event.target.value"
-      @save="updatePassword"
-      @cancel="cancelEditModal"
-    />
-
-    <!-- Email modal-->
+    <div class="flex flex-col w-full">
+      <button @click="logOut()" class="btn btn-danger">Logout</button>
+    </div>
 
     <EditModal
-      v-if="isEmailModalVisible"
-      :isVisible="isEmailModalVisible"
-      modalTitle="Update email"
-      inputPlaceholder="Enter new email"
-      type="email"
+      v-if="modalVisibleType !== null"
+      :isVisible="modalVisibleType !== null"
+      :modalTitle="_modalData[modalVisibleType].title"
+      :inputPlaceholder="_modalData[modalVisibleType].placeholder"
+      :type="_modalData[modalVisibleType].type"
+      :helperText="_modalData[modalVisibleType].helperText"
+      :errorMessage="inputErrorMessage"
+      :defaultValue="form[modalVisibleType]"
       saveButtonLabel="Save"
       cancelButtonLabel="Cancel"
-      :defaultValue="user.email"
-      :value="newEmail"
-      @input="newEmail = $event.target.value"
-      @save="updateEmail"
+      @input="validateInput($event.target.value, modalVisibleType)"
+      @save="_handleInputSubmit($event, modalVisibleType)"
       @cancel="cancelEditModal"
     />
   </main>
