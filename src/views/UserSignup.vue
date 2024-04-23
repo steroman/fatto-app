@@ -1,7 +1,7 @@
 <script setup>
 import { useUserStore } from '@/stores/userStore'
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, sameAs } from '@vuelidate/validators'
+import { required, email, sameAs, minLength } from '@vuelidate/validators'
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -19,7 +19,7 @@ const form = reactive({
 const rules = computed(() => {
   return {
     email: { required, email }, // Email is required and must be a valid email address
-    password: { required }, // Password is required
+    password: { required, minLength: minLength(6) }, // Password is required
     confirmPassword: { required, sameAsPassword: sameAs(form.password) } // Password confirmation is required
   }
 })

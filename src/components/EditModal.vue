@@ -7,7 +7,7 @@ const inputValue = ref('')
 
 const _save = () => {
   const newData = inputValue.value;
-  console.log("Save button clicked. New data:", newData); // Add this line
+  // console.log("Save button clicked. New data:", newData); // Add this line
   emit('save', newData);
 };
 
@@ -23,7 +23,9 @@ const props = defineProps({
   saveButtonLabel: String,
   cancelButtonLabel: String,
   defaultValue: String,
-  type: String
+  type: String,
+  helperText: String,
+  errorMessage: String
 })
 
 inputValue.value = props.defaultValue
@@ -49,6 +51,10 @@ onMounted(() => {
     <div class="modal-box">
       <h3 class="font-bold text-lg">{{ props.modalTitle }}</h3>
       <input v-model="inputValue" :type="props.type" class="input my-4" :placeholder="props.inputPlaceholder">
+      <span v-if="props.helperText || props.errorMessage" :class="`${props.errorMessage ? 'text-red-500' : 'text-gray-500'} block text-sm`">
+        {{ props.errorMessage || props.helperText }}
+      </span>
+      <!-- <span v-if="props.errorMessage" class="block text-red-500 text-sm">{{ props.errorMessage }}</span> -->
       <div class="modal-action">
         <button @click="_save" class="btn mr-2">{{ props.saveButtonLabel }}</button>
         <button @click="_cancel" class="btn btn-ghost">{{ props.cancelButtonLabel }}</button>

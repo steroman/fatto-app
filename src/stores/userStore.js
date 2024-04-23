@@ -72,6 +72,7 @@ export const useUserStore = defineStore('user', {
         displayName.value = user.value?.user_metadata?.display_name || ''
       } catch (error) {
         console.error(error);
+        throw new Error(error.message);
       }
     }
     
