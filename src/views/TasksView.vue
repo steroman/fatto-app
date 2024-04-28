@@ -1,12 +1,93 @@
+<template>
+  <main class="container mx-auto">
+    <NavBar />
+    <div class="h-screen max-w-160 mx-auto">
+      <button
+        @click="openCreateModal()"
+        class="fixed right-6 top-24 hidden sm:block md:block lg:block h-12 ml-4 bg-primary hover:bg-hover dark:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl py-2 px-4 hover:shadow-md"
+      >
+        Add task
+      </button>
+      <p v-if="loadingTask" class="pt-56 px-6 max-w-120 mx-auto w-full h-screen">
+        Loading tasks...
+      </p>
+
+      <template v-else>
+        <div class="px-6 h-taskWrap1" v-if="taskSortered.length !== 0">
+          <div class="mb-4 pt-24">
+            <div class="w-full">
+              <div class="text-3xl font-bold mb-4 text-center w-full">
+                {{ userStore.displayName ? `${userStore.displayName}'s` : 'Your' }} tasks ({{
+                  taskSortered.length
+                }})
+              </div>
+            </div>
+            <SortTasks />
+          </div>
+
+          <div class="h-taskWrap overflow-y-auto">
+            <div class="h-min space-y-4">
+              <TaskCard
+                v-for="task in taskSortered"
+                :key="task.id"
+                :task="task"
+                @edit="openEditModal(task)"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="pt-32 sm:pt-24 max-w-160 mx-auto w-full h-screen"
+          v-else-if="taskSortered.length === 0"
+        >
+          <div class="pb-6 px-6 overflow-y-auto h-settings sm:h-settings1 flex items-center">
+            <TasksEmptyState />
+          </div>
+        </div>
+      </template>
+      <div class="block sm:hidden md:hidden lg:hidden dark:bg-gray-800 p-6 w-full fixed bottom-0">
+        <button
+          @click="openCreateModal()"
+          class="w-full h-14 bg-primary dark:bg-gray-700 hover:bg-hover dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
+        >
+          Add task
+        </button>
+      </div>
+    </div>
+
+    <EditModal
+      v-if="isModalVisible"
+      type="text"
+      :dialogTitle="editedTask ? 'Edit task' : 'Create a task'"
+      labelTitle="Task Title *"
+      errorMsg="Enter a task title"
+      :show="isModalVisible"
+      @show="showModal(value)"
+      :value="editedTask ? editedTask.title : ''"
+      :validateRule="{
+        required: helpers.withMessage('Task title cannot be empty', required),
+        minLength: helpers.withMessage(
+          'Task title cannot be shorter than 3 characters',
+          minLength(3)
+        )
+      }"
+      :save="saveEditedTask"
+    />
+  </main>
+</template>
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
-import CreateTask from '@/components/CreateTask.vue'
-import TaskCard from '@/components/TaskCard.vue'
 import { useUserStore } from '@/stores/userStore'
-import SortTasks from '@/components/SortTasks.vue'
 import { storeToRefs } from 'pinia'
+import { required, minLength, helpers } from '@vuelidate/validators'
+
+import NavBar from '@/components/NavBar.vue'
+import TaskCard from '@/components/TaskCard.vue'
 import EditModal from '@/components/EditModal.vue'
+import SortTasks from '@/components/SortTasks.vue'
+import TasksEmptyState from '@/components/TasksEmptyState.vue'
 
 const tasksStore = useTasksStore()
 const userStore = useUserStore()
@@ -14,80 +95,51 @@ const userStore = useUserStore()
 const { taskSortered } = storeToRefs(tasksStore)
 const { user } = storeToRefs(userStore)
 
-// State for edit modal
-const isEditModalVisible = ref(false)
+const isModalVisible = ref(false)
 const editedTask = ref(null)
-const editedTitle = ref('')
+const loadingTask = ref(false)
 
 onMounted(async () => {
+  loadingTask.value = true
   await userStore.fetchUserHideCompletedSetting()
   await userStore.fetchUserSortingPreference()
   await tasksStore.fetchAllTasks()
+  loadingTask.value = false
 })
 
-// Methods for handling the edit modal
-const openEditModal = (task) => {
-  editedTask.value = task
-  editedTitle.value = task.title
-  isEditModalVisible.value = true
+const openCreateModal = () => {
+  editedTask.value = null
+  isModalVisible.value = true
 }
 
-const saveEditedTask = async () => {
+const showModal = (value) => {
+  isModalVisible.value = value
+}
+
+const openEditModal = (task) => {
+  editedTask.value = task
+  isModalVisible.value = true
+}
+
+const saveEditedTask = async (title) => {
   if (editedTask.value) {
     const taskToUpdate = {
       ...editedTask.value,
-      title: editedTitle.value
+      title
     }
     await tasksStore.updateExistingTask(taskToUpdate)
+  } else {
+    const task = {
+      title
+    }
+
+    await tasksStore.createNewTask(task)
+    tasksStore.fetchAllTasks()
   }
-  isEditModalVisible.value = false
+  isModalVisible.value = false
 }
 
 const cancelEditModal = () => {
-  isEditModalVisible.value = false
+  isModalVisible.value = false
 }
-
 </script>
-
-<template>
-  <main class="container mx-auto">
-    <h1 class="text-3xl font-semibold mb-4">{{ userStore.displayName ? userStore.displayName + "'s tasks" : "Your tasks" }}</h1>
-    <template v-if="user">
-      <CreateTask />
-    </template>
-    <template v-if="taskSortered && taskSortered.length">
-      <p class="mb-2">Total tasks: {{ taskSortered.length }}</p>
-      <div class="sorting-tools flex justify-between">
-        <SortTasks />
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <TaskCard v-for="task in taskSortered" :key="task.id" :task="task" @editTask="openEditModal(task)" />
-      </div>
-    </template>
-    <template v-else>
-      <p v-if="!user">Loading account information...</p>
-      <p v-else-if="!taskSortered">Loading tasks...</p>
-      <p v-else>No tasks available.</p>
-    </template>
-    <button><router-link to="/settings" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Settings</router-link></button>
-
-    <!-- Edit modal -->
-    <EditModal
-      v-if="isEditModalVisible"
-      :isVisible="isEditModalVisible"
-      modalTitle="Edit Task Title"
-      inputPlaceholder="Enter new title"
-      type="text"
-      saveButtonLabel="Save"
-      cancelButtonLabel="Cancel"
-      :value="editedTitle"
-      @input="editedTitle = $event.target.value"
-      @save="saveEditedTask"
-      @cancel="cancelEditModal"
-    />
-  </main>
-</template>
-
-<style scoped>
-
-</style>
