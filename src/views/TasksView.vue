@@ -45,7 +45,9 @@
           </div>
         </div>
       </template>
-      <div class="block sm:hidden md:hidden lg:hidden dark:bg-gray-800 p-6 w-full fixed bottom-0">
+      <div
+        class="block sm:hidden md:hidden lg:hidden bg-white dark:bg-gray-800 p-6 w-full fixed bottom-0"
+      >
         <button
           @click="openCreateModal()"
           class="w-full h-14 bg-primary dark:bg-gray-700 hover:bg-hover dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
