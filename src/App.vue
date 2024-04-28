@@ -17,7 +17,7 @@
   <header>
     <div class="wrapper">
       <RouterView />
-        <!-- <RouterLink to="/">Home</RouterLink>
+      <!-- <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
         <RouterLink to="/tasks">Tasks</RouterLink>
@@ -25,7 +25,6 @@
       </nav> -->
     </div>
   </header>
-
 </template>
 
 <style scoped>

@@ -1,18 +1,20 @@
 <script setup></script>
 
 <template>
-    <div class="bg-white min-h-screen flex flex-col justify-center items-center">
-      <div class="max-w-lg mx-auto px-4 py-8">
-        <img src="@/assets/logo.svg" alt="DoToo Logo" class="w-20 mx-auto mb-4">
-        <h1 class="text-3xl font-semibold text-center mb-4">Welcome to DoToo</h1>
-        <p class="text-lg text-center mb-8">Your simple and effective to-do list app.</p>
-        <div class="flex flex-col space-y-4 items-center">
-          <router-link to="/signup" class="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded text-center">Get started</router-link>
-          <p class="mt-4 text-center">Already have an account? <router-link to="/login" class="text-blue-500">Sign in</router-link></p>
-        </div>
-      </div>
-    </div>
-  </template>
-
-  <style scoped>
-  </style>
+  <div class="pt-20 max-w-96 p-7 mx-auto">
+    <h1 class="text-3xl font-bold text-center mb-4">
+      Get things done with <span class="text-primary font-black">DoToo</span>
+    </h1>
+    <p class="text-lg text-center mb-4">Your simple and effective to-do list app.</p>
+    <img src="@/assets/home-illustration.svg" alt="DoToo Logo" class="w-64 mx-auto mb-8" />
+    <router-link
+      to="/signup"
+      class="w-full h-14 block bg-primary dark:bg-gray-700 hover:bg-hover dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
+      >Get Started</router-link
+    >
+    <p class="my-2 text-center">
+      Already have an account?
+      <router-link to="/login" class="px-1 text-primary hover:text-hover">Log in</router-link>
+    </p>
+  </div>
+</template>
