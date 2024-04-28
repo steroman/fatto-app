@@ -1,12 +1,13 @@
 <script setup>
+import { ref, reactive, computed } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, sameAs, minLength } from '@vuelidate/validators'
-import { ref, reactive, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { required, email, sameAs, minLength, helpers } from '@vuelidate/validators'
 
 const userStore = useUserStore()
-const router = useRouter()
+
+const message = ref('')
+const success = ref(true)
 
 const form = reactive({
   name: '',
@@ -18,9 +19,21 @@ const form = reactive({
 // Define form validation rules
 const rules = computed(() => {
   return {
-    email: { required, email }, // Email is required and must be a valid email address
-    password: { required, minLength: minLength(6) }, // Password is required
-    confirmPassword: { required, sameAsPassword: sameAs(form.password) } // Password confirmation is required
+    name: {
+      required: helpers.withMessage('Name cannot be empty', required)
+    },
+    email: {
+      required: helpers.withMessage('Email address cannot be empty', required),
+      email: helpers.withMessage('Enter correct email address', email)
+    }, // Email is required and must be a valid email address
+    password: {
+      required: helpers.withMessage('Password cannot be empty', required),
+      minLength: helpers.withMessage('Password must be longer than 6 characters', minLength(6))
+    }, // Password is required
+    confirmPassword: {
+      required: helpers.withMessage('Cofirm password cannot be empty', required),
+      sameAsPassword: helpers.withMessage('Retype password', sameAs(form.password))
+    } // Password confirmation is required
   }
 })
 
@@ -39,83 +52,110 @@ async function handleSubmit() {
   if (!result) {
     // If there are errors in the form, show an alert indicating that the form is invalid
     formIsValid.value = false
+    success.value = false
+    message.value = 'Enter valid information.'
   } else {
     // If the form is valid, perform some action with the form data
-    await signUp()
+    try {
+      await signUp()
+    } catch (err) {
+      message.value = err.message
+      success.value = false
+    }
   }
 }
 
 // Function to sign up the user
 async function signUp() {
-  await userStore.createUser(form.email, form.password, form.name)
   confirmationSent.value = true
-}
-
-// Function to redirect to the home page
-function redirectToHome() {
-  router.push('/')
+  return await userStore.createUser(form.email, form.password, form.name)
 }
 </script>
 
 <template>
-  <div class="container mx-auto">
-    <!-- Sign-up form -->
-    <div v-if="!confirmationSent">
-      <h1 class="text-2xl font-semibold mt-8">Sign up for to DoToo</h1>
-      <form class="mt-4" @submit.prevent="handleSubmit">
-        <div class="mb-4">
-          <label for="name" class="block">Name (Optional)</label>
-          <input type="text" id="name" v-model="form.name" class="w-full border p-2" />
+  <div class="pt-10 px-6 max-w-120 mx-auto w-full h-screen" v-if="!confirmationSent">
+    <h1 class="text-3xl font-bold text-center mb-2">Welcome to DoToo</h1>
+    <p class="text-lg text-center mb-4">Create an account to start using DoToo for free.</p>
+    <form @submit.prevent="handleSubmit" class="pb-10">
+      <div class="space-y-4 mb-6">
+        <div class="space-y-1">
+          <label class="font-medium text-lg text-left w-full block" for="name">Full Name *</label>
+          <input
+            type="text"
+            v-model="form.name"
+            id="name"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.name.$error ? 'outline-red-300' : ''} ${v$.name.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+          />
+          <span v-if="v$.name.$error" class="block text-red-500 text-sm text-left">{{
+            v$.name.$errors[0].$message
+          }}</span>
         </div>
-        <div class="mb-4">
-          <label for="email" class="block">Email *</label>
-          <input type="text" id="email" v-model="form.email" class="w-full border p-2" />
-          <span v-if="v$.email.$error" class="text-red-500 text-sm">
-            {{ v$.email.$errors[0].$message }}
-          </span>
+        <div class="space-y-1">
+          <label class="font-medium text-lg text-left w-full block" for="email">Email *</label>
+          <input
+            type="text"
+            v-model="form.email"
+            id="email"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.email.$error ? 'outline-red-300' : ''} ${v$.email.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+          />
+          <span v-if="v$.email.$error" class="block text-red-500 text-sm text-left">{{
+            v$.email.$errors[0].$message
+          }}</span>
         </div>
-        <div class="mb-4">
-          <label for="password" class="block">Password *</label>
-          <input type="password" id="password" v-model="form.password" class="w-full border p-2" />
-          <span v-if="!v$.password.$error && !v$.password.$errors.length" class="text-gray-500 text-sm"
->Minimum 6 characters</span
+        <div class="space-y-1">
+          <label class="font-medium text-lg text-left w-full block" for="password"
+            >Password *</label
           >
-          <span v-if="v$.password.$error" class="block text-red-500 text-sm"
-            >{{ v$.password.$errors[0].$message }}</span
-          >
-        </div>
-        <div class="mb-4">
-          <label for="confirm-password" class="block">Repeat password *</label>
           <input
             type="password"
-            id="confirm-password"
-            v-model="form.confirmPassword"
-            class="w-full border p-2"
+            v-model="form.password"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.password.$error ? 'outline-red-300' : ''} ${v$.password.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
           />
-          <span v-if="v$.confirmPassword.$error" class="block text-red-500 text-sm"
-            >{{ v$.confirmPassword.$errors[0].$message }}</span
-          >
+          <span v-if="v$.password.$error" class="block text-red-500 text-sm text-left">{{
+            v$.password.$errors[0].$message
+          }}</span>
         </div>
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2">Sign up</button>
-        <span v-if="!formIsValid" class="block text-red-500 text-sm">Fix the errors and try again</span>
-      </form>
-      <span class="block mt-4">
-        Already have an account?<router-link to="/login" class="text-blue-500">Log in</router-link>
-      </span>
-    </div>
-
-    <!-- Success message -->
-    <div v-if="confirmationSent" class="mt-8">
-      <h2 class="text-xl font-semibold">Check your inbox</h2>
-      <p class="text-sm mt-2">
-        We sent an email to {{ form.email }}. Open the link in the email to verify your account and
-        start using DoToo.
-      </p>
-      <button @click="redirectToHome" class="bg-blue-500 text-white px-4 py-2 mt-4">
-        Go back home
+        <div class="space-y-1">
+          <label class="font-medium text-lg text-left w-full block" for="cofirm-password"
+            >Confirm Password *</label
+          >
+          <input
+            type="password"
+            v-model="form.confirmPassword"
+            id="confirm-password"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.confirmPassword.$error ? 'outline-red-300' : ''} ${v$.confirmPassword.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+          />
+          <span v-if="v$.confirmPassword.$error" class="block text-red-500 text-sm text-left">{{
+            v$.confirmPassword.$errors[0].$message
+          }}</span>
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="w-full h-14 mb-2 bg-primary dark:bg-gray-700 hover:bg-hover dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
+      >
+        Sign Up
       </button>
-    </div>
+      <span
+        :class="['block text-red-500 text-sm text-center', formIsValid ? 'invisible' : 'visible']"
+        >Fix errors and try again.</span
+      >
+      <p class="mb-2 mt-2">
+        Already got an account?
+        <router-link to="/login" class="px-1 text-primary hover:text-hover">Log in</router-link>
+      </p>
+    </form>
+  </div>
+  <div class="pt-10 px-6 max-w-120 mx-auto w-full h-screen" v-if="confirmationSent">
+    <h1 class="text-3xl font-bold text-center mb-4">Check your inbox</h1>
+    <p class="text-lg text-center mb-8">
+      We sent an email to <strong>{{ form.email }}</strong
+      >. <br />Open the link in the email to verify your account and start using DoToo.
+    </p>
+    <router-link
+      to="/"
+      class="w-full h-14 block bg-primary hover:bg-hover text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
+      >Go back home</router-link
+    >
   </div>
 </template>
-
-<style scoped></style>

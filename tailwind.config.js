@@ -4,6 +4,9 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        poppins: ['Poppins', 'Helvetica', 'sans-serif']
+      },
       colors: {
         primary: '#50C2C9',
         secondary: '#F0F4F3',

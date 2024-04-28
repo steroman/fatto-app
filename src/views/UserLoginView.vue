@@ -1,17 +1,17 @@
 <script setup>
-import { useUserStore } from '@/stores/userStore'
-import { useVuelidate } from '@vuelidate/core'
-import { required, email } from '@vuelidate/validators'
 import { ref, reactive, computed } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+import { useToastStore } from '@/stores/toastStore'
+import { useVuelidate } from '@vuelidate/core'
+import { required, email, helpers } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
-import ToastComponent from '@/components/ToastComponent.vue'
-
-const router = useRouter()
 
 const userStore = useUserStore()
+const router = useRouter()
+const toastStore = useToastStore()
 
-const errorMessage = ref('')
-const formIsValid = ref(true) // Track the form validity
+const message = ref('')
+const success = ref(true)
 
 const form = reactive({
   email: '',
@@ -21,11 +21,12 @@ const form = reactive({
 const rules = computed(() => {
   return {
     email: {
-      required,
-      email,
-      $rewardearly: true
+      required: helpers.withMessage('Email address cannot be empty', required),
+      email: helpers.withMessage('Enter correct email address', email)
     },
-    password: { required } // Password is required
+    password: {
+      required: helpers.withMessage('Password cannot be empty', required)
+    }
   }
 })
 
@@ -35,96 +36,89 @@ const signInAndRedirect = async () => {
   try {
     await userStore.signIn(form.email, form.password)
     router.push('/tasks')
+    toastStore.showToast(true, 'Sign In successful')
   } catch (error) {
     if (error.message === 'Email not confirmed') {
-      errorMessage.value = 'Email not verified. Verify it and try again.'
-      resetErrorMessageAfterDelay(5000)
+      message.value = 'Email not verified. Verify it and try again.'
     } else if (error.message === 'Invalid login credentials') {
-      errorMessage.value = 'Invalid credentials. Try again.'
-      resetErrorMessageAfterDelay(5000)
+      message.value = 'Invalid credentials. Try again.'
     } else {
-      errorMessage.value = 'An error occurred. Please try again.'
-      resetErrorMessageAfterDelay(5000)
+      message.value = 'An error occurred. Please try again.'
     }
+    success.value = false
   }
 }
 
-function resetErrorMessageAfterDelay(delay) {
-  setTimeout(() => {
-    errorMessage.value = ''
-  }, delay)
-}
-
 async function handleSubmit() {
-  // Validate the form fields
   const result = await v$.value.$validate()
-  formIsValid.value = result // Update form validity
   if (!result) {
-    // If there are errors in the form, show an alert indicating that the form is invalid
-    formIsValid.value = false
+    message.value = 'Fix errors and try again.'
+    success.value = false
   } else {
-    // If the form is valid, perform some action with the form data
+    success.value = true
     signInAndRedirect()
   }
 }
 </script>
 
 <template>
-  <div class="container mx-auto">
-    <h1 class="text-2xl font-semibold mt-8">Log in to DoToo</h1>
-    <form class="mt-4" @submit.prevent="handleSubmit">
-      <div class="mb-4">
-        <label for="email" class="block">Email *</label>
-        <input type="text" id="email" v-model="form.email" class="w-full border p-2" />
-        <span v-if="v$.email.$error" class="block text-red-500 text-sm"
-          >{{ v$.email.$errors[0].$message }}</span
-        >
+  <div class="pt-28 px-6 max-w-120 mx-auto w-full h-screen">
+    <h1 class="text-3xl font-bold text-center mb-2">Log in to DoToo</h1>
+    <form @submit.prevent="handleSubmit" class="pb-28">
+      <div class="space-y-4 mb-6 mt-4">
+        <div class="space-y-1">
+          <label class="font-medium text-lg text-left w-full block" for="email">Email *</label>
+          <input
+            type="text"
+            v-model="form.email"
+            id="email"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.email.$error ? 'outline-red-300' : ''} ${v$.email.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+          />
+
+          <span v-if="v$.email.$error" class="block text-red-500 text-sm text-left">{{
+            v$.email.$errors[0].$message
+          }}</span>
+        </div>
+        <div class="space-y-1">
+          <label class="font-medium text-lg text-left w-full block" for="password"
+            >Password *</label
+          >
+          <input
+            type="password"
+            v-model="form.password"
+            id="password"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.email.$error ? 'outline-red-300' : ''} ${v$.email.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+            placeholder="Enter your Password"
+          />
+          <span v-if="v$.password.$error" class="block text-red-500 text-sm text-left">{{
+            v$.password.$errors[0].$message
+          }}</span>
+        </div>
       </div>
-      <div class="mb-4">
-        <label for="password" class="block">Password *</label>
-        <input type="password" id="password" v-model="form.password" class="w-full border p-2" />
-        <span v-if="v$.password.$error"
-        class="block text-red-500 text-sm">{{ v$.password.$errors[0].$message }}</span
+
+      <button
+        class="w-full h-14 mt-2 bg-primary dark:bg-gray-700 hover:bg-hover dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
+      >
+        Sign In
+      </button>
+      <span
+        :class="['block text-red-500 text-sm text-center', success ? 'invisible' : 'visible']"
+        >{{ message }}</span
+      >
+      <p class="py-4">
+        No account?
+        <router-link to="/signup" class="px-1 text-primary hover:text-hover dark:text-primaryDark"
+          >Sign up</router-link
         >
-      </div>
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2">Log in</button>
-      <!-- Display error message if form has errors -->
-      <span v-if="!formIsValid" class="block text-red-500 text-sm">Fix the errors and try again</span>
+      </p>
+      <p>
+        Forgot password?
+        <router-link
+          to="/forgot-password"
+          class="px-1 text-primary hover:text-hover dark:text-primaryDark"
+          >Reset it</router-link
+        >
+      </p>
     </form>
-    <div class="toast toast-top toast-center" v-if="errorMessage">
-      <div class="toast-container">
-        <transition name="fade">
-          <ToastComponent :errorMessage="errorMessage" />
-        </transition>
-      </div>
-    </div>
-    <p class="mt-4">
-      No account? <router-link to="/signup" class="text-blue-500">Sign up</router-link>
-    </p>
-    <p>Forgot password? <router-link to="/forgot-password" class="text-blue-500">Reset it</router-link></p>
   </div>
 </template>
-
-<style scoped>
-.alert {
-  gap: 0;
-}
-
-.toast-container {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 50; /* Ensure the toast appears above other content */
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s; /* Smooth transition for opacity change */
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0; /* Start with 0 opacity during enter and leave transitions */
-}
-</style>
