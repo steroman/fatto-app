@@ -1,257 +1,227 @@
 <script setup>
-import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength } from '@vuelidate/validators'
-import { ref, computed } from 'vue'
-import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
+import { useToastStore } from '@/stores/toastStore'
+import { required, minLength, helpers, email } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
+
+import NavBar from '@/components/NavBar.vue'
+import ToggleSwitch from '@/components/ToggleSwitch.vue'
 import EditModal from '@/components/EditModal.vue'
+import { storeToRefs } from 'pinia'
+
+const userStore = useUserStore()
+const toastStore = useToastStore()
+const isModalVisible = ref(false)
+const inputType = ref('text')
+const dialogTitle = ref('Edit Name')
+const labelTitle = ref('')
+const errorMsg = ref('')
+const text = ref('')
+const validateRule = ref({})
+const showErrorInModal = ref(false)
 
 const router = useRouter()
-const userStore = useUserStore()
-const { user, displayName, hideCompletedSetting } = storeToRefs(userStore)
 
-let v$ = null
-const _modalData = {
-  name: {
-    title: 'Update name',
-    placeholder: 'Enter new name',
-    type: 'text',
-  },
-  email: {
-    title: 'Update email',
-    placeholder: 'Enter new email',
-    type: 'email',
-  },
-  password: {
-    title: 'Update password',
-    placeholder: 'Enter new password',
-    type: 'password',
-    helperText: 'Password must be at least 6 characters',
-  }
+const toastMessage = ref('')
+
+const { hideCompletedSetting, isDarkMode, user, displayName } = storeToRefs(userStore)
+
+const showModal = (value) => {
+  isModalVisible.value = value
 }
 
-const newHideCompletedSetting = ref(hideCompletedSetting.value)
-
-const form = ref({
-  name: '',
-  email: '',
-  password: ''
-})
-const inputValidationSelected = ref('')
-const hasSavedData = ref(false)
-const formIsValid = ref(true) // Track the form validity
-const modalVisibleType = ref(null)
-const inputErrorMessage = ref(null)
-
-const rules = computed(() => {
-  if (inputValidationSelected.value === 'email') {
-    return {
-      email: { required, email }
-    }
-  }
-
-  if (inputValidationSelected.value === 'password') {
-    return {
-      password: { required, minLength: minLength(6) }
-    }
-  }
-
-  return {}
-})
-
-async function _handleInputSubmit(newValue, inputType) {
-  inputValidationSelected.value = inputType
-  v$ = useVuelidate(rules, form)
-
-  hasSavedData.value = true
-
-  await validateInput(newValue, inputType)
-
-  if (formIsValid.value) {
-    await updateUserInfo(form.value[inputType], inputType)
-  }
-}
-
-const validateInput = async (newValue, inputType) => {
-  form.value[inputType] = newValue
-
-  if (hasSavedData.value) {
-    const result = await v$?.value.$validate()
-    formIsValid.value = result // Update form validity
-    if (!result) {
-      inputErrorMessage.value = v$?.value[inputType]
-        ? v$?.value[inputType].$error
-          ? v$?.value[inputType].$errors[0].$message
-          : ''
-        : ''
-      formIsValid.value = false
-      return
-    }
-
-    inputErrorMessage.value = ''
-    formIsValid.value = true
-  }
-}
-
-const showNameModal = () => {
-  modalVisibleType.value = 'name'
-  form.value.name = displayName.value
-}
-
-const showPasswordModal = () => {
-  modalVisibleType.value = 'password'
-}
-
-const showEmailModal = () => {
-  modalVisibleType.value = 'email'
-  form.value.email = user.value.email
-}
-
-const logOut = async () => {
-  await userStore.signOut()
-  router.push('/login')
-}
-
-const updateUserInfo = async (newValue, inputType) => {
+const saveText = async (newText) => {
   try {
     let newData = {}
-
-    if (inputType === 'email') {
-      newData = { email: newValue }
-    } else if (inputType === 'name') {
-      newData = { data: { display_name: newValue } }
-    } else if (inputType === 'password') {
-      newData = { password: newValue }
+    if (inputType.value === 'text') {
+      newData = { data: { display_name: newText } }
+      toastMessage.value = 'Attempt to name change successed'
+      errorMsg.value = 'Attempt to name change failed'
+    } else if (inputType.value === 'email') {
+      newData = { email: newText }
+      toastMessage.value = 'Verity your new email'
+      errorMsg.value = 'Attempt to email change failed'
+    } else if (inputType.value === 'password') {
+      newData = { password: newText }
+      toastMessage.value = 'Attempt to password change successed'
+      errorMsg.value = 'Attempt to password change failed'
     }
-
     await userStore.updateUserData(newData)
-    modalVisibleType.value = null
-    hasSavedData.value = false
-
-    form.value[inputType] = ''
-    inputErrorMessage.value = ''
-    formIsValid.value = true
+    isModalVisible.value = false
+    text.value = ''
+    toastStore.showToast(true, toastMessage.value)
   } catch (err) {
-    inputErrorMessage.value = err.message
-    formIsValid.value = false
+    showErrorInModal.value = true
+    errorMsg.value = err.message
   }
 }
 
-// Listen for the 'cancel' event emitted by EditModal and handle it
-const cancelEditModal = () => {
-  modalVisibleType.value = null
+const onClickChangeName = () => {
+  isModalVisible.value = true
+  inputType.value = 'text'
+  dialogTitle.value = 'Update name'
+  labelTitle.value = 'Full Name *'
+  errorMsg.value = 'Name is required'
+  text.value = displayName.value
+  validateRule.value = {
+    required: helpers.withMessage('Name cannot be empty', required)
+  }
+}
+
+const onClickChangeEmail = () => {
+  isModalVisible.value = true
+  inputType.value = 'email'
+  dialogTitle.value = 'Update email'
+  labelTitle.value = 'Email Address *'
+  errorMsg.value = 'Enter valid email address'
+  text.value = user.value.email
+  validateRule.value = {
+    required: helpers.withMessage('Email address cannot be empty', required),
+    email: helpers.withMessage('Enter correct email address', email)
+  }
+}
+
+const onClickChangePassword = () => {
+  isModalVisible.value = true
+  inputType.value = 'password'
+  dialogTitle.value = 'Update password'
+  labelTitle.value = 'Password *'
+  ;(errorMsg.value = 'Password is required'),
+    (validateRule.value = {
+      required: helpers.withMessage('Password cannot be empty', required),
+      minLength: helpers.withMessage('Password must be longer than 6 characters', minLength(6))
+    })
+}
+
+const handleHideTasksSettingChange = async (value) => {
+  try {
+    await userStore.updateUserHideCompletedSetting(value)
+    if (value) {
+      toastStore.showToast(true, 'Enabled hide completed tasks')
+    } else {
+      toastStore.showToast(true, 'Disabled hide completed tasks')
+    }
+  } catch (err) {
+    toastStore.showToast(false, 'Change failed')
+  }
+}
+
+const handleDarkModeChange = async (value) => {
+  try {
+    await userStore.updateDarkMode(value)
+    if (value) {
+      toastStore.showToast(true, 'Enabled Dark Mode')
+      document.documentElement.classList.add('dark')
+    } else {
+      toastStore.showToast(true, 'Enabled Light Mode')
+      document.documentElement.classList.remove('dark')
+    }
+  } catch (err) {
+    toastStore.showToast(false, 'Change theme failed')
+  }
+}
+const onLogoutClick = async () => {
+  router.push('/login')
+  await userStore.signOut()
 }
 </script>
 
 <template>
-  <main class="container mx-auto" v-if="user">
-    <div class="flex items-center justify-start mb-4">
-      <router-link to="/tasks" class="flex items-center text-gray-600 hover:text-gray-800">
-        <svg
-          class="h-6 w-6 mr-1"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          ></path>
-        </svg>
-      </router-link>
-      <h1 class="text-3xl font-semibold">Settings</h1>
+  <NavBar />
+  <div class="pt-24 sm:pt-24 max-w-160 mx-auto w-full h-screen">
+    <div class="flex-row flex px-6">
+      <router-link
+        to="/tasks"
+        class="bg-transparen hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full w-10 h-10 p-2 mr-2"
+        ><i class="material-icons">arrow_back</i></router-link
+      >
+      <h1 class="text-3xl font-bold text-left mb-4">Settings</h1>
     </div>
-    <div class="flex flex-col w-full">
-      <div>
-        <h2 class="text-2xl font-medium">Account</h2>
-        <p class="text-gray-600">Update your information</p>
+    <div class="pb-6 px-6 overflow-y-auto h-settings sm:h-settings1">
+      <div
+        class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
+      >
+        <p class="text-lg text-left mb-8">Account</p>
         <div>
-          <p class="py-2 text-xl font-semibold">Name</p>
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-gray-600">{{ displayName ? displayName : '-' }}</p>
+          <p class="text-left font-bold text-lg">Name</p>
+          <div class="flex flex-row justify-between items-center">
+            <p class="break-all">{{ displayName }}</p>
             <button
-              @click="showNameModal()"
-              class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2"
+              @click="onClickChangeName"
+              class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
             >
               Change
             </button>
           </div>
         </div>
-
         <div>
-          <p class="py-2 text-xl font-semibold">Email Address</p>
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-gray-600">{{ user.email }}</p>
+          <p class="text-left font-bold text-lg">Email</p>
+          <div class="flex flex-row justify-between items-center">
+            <p class="break-all">{{ user && user.email }}</p>
             <button
-              @click="showEmailModal()"
-              class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2"
+              @click="onClickChangeEmail"
+              class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
             >
               Change
             </button>
           </div>
-          <div>
-            <p class="py-2 text-xl font-semibold">Password</p>
-            <div class="flex items-center justify-between mb-4">
-              <p class="text-gray-600">••••••••••••</p>
-              <button
-                @click="showPasswordModal()"
-                class="inline-flex text-sm font-semibold text-blue-600 underline decoration-2"
-              >
-                Change
-              </button>
-            </div>
+        </div>
+        <div>
+          <p class="text-left font-bold text-lg">Password</p>
+          <div class="flex flex-row justify-between items-center">
+            <p class="break-all">••••••••••••</p>
+            <button
+              @click="onClickChangePassword"
+              class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
+            >
+              Change
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
+      >
+        <p class="text-lg text-left mb-8">Appearance</p>
+        <div class="space-y-4">
+          <div class="flex flex-row justify-between items-center">
+            <p>Hide completed tasks</p>
+            <ToggleSwitch
+              :isChecked="hideCompletedSetting"
+              @change="handleHideTasksSettingChange"
+            />
+          </div>
+          <div class="flex flex-row justify-between items-center">
+            <p>Dark mode</p>
+            <ToggleSwitch :isChecked="isDarkMode" @change="handleDarkModeChange" />
           </div>
         </div>
       </div>
     </div>
-    <div class="divider"></div>
-    <div class="flex flex-col w-full">
-      <div>
-        <h2 class="text-2xl font-medium">Appearance</h2>
-        <p class="text-gray-600">Customise what tasks you see</p>
-      </div>
-      <div class="mt-8">
-        <div class="flex items-center mb-4">
-          <label for="hideCompleted" class="text-gray-600 cursor-pointer"
-            >Hide completed tasks</label
-          >
-          <input
-            type="checkbox"
-            class="toggle toggle-accent mr-2"
-            id="hideCompleted"
-            v-model="newHideCompletedSetting"
-            @change="userStore.updateUserHideCompletedSetting(newHideCompletedSetting)"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="divider"></div>
-    <div class="flex flex-col w-full">
-      <button @click="logOut()" class="btn btn-danger">Logout</button>
-    </div>
 
-    <EditModal
-      v-if="modalVisibleType !== null"
-      :isVisible="modalVisibleType !== null"
-      :modalTitle="_modalData[modalVisibleType].title"
-      :inputPlaceholder="_modalData[modalVisibleType].placeholder"
-      :type="_modalData[modalVisibleType].type"
-      :helperText="_modalData[modalVisibleType].helperText"
-      :errorMessage="inputErrorMessage"
-      :defaultValue="form[modalVisibleType]"
-      saveButtonLabel="Save"
-      cancelButtonLabel="Cancel"
-      @input="validateInput($event.target.value, modalVisibleType)"
-      @save="_handleInputSubmit($event, modalVisibleType)"
-      @cancel="cancelEditModal"
-    />
-  </main>
+    <div
+      class="block sm:hidden md:hidden lg:hidden fixed bg-white dark:bg-gray-800 p-6 w-full bottom-0"
+    >
+      <button
+        @click="onLogoutClick"
+        class="w-full h-14 bg-primary hover:bg-hover text-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
+      >
+        Log out
+      </button>
+    </div>
+  </div>
+  <EditModal
+    v-if="isModalVisible"
+    :type="inputType"
+    :dialogTitle="dialogTitle"
+    :labelTitle="labelTitle"
+    :errorMsg="errorMsg"
+    :show="isModalVisible"
+    @show="showModal(value)"
+    :value="text"
+    :showErrorInModal="showErrorInModal"
+    :validateRule="validateRule"
+    :save="saveText"
+  />
 </template>
-
-<style scoped>
-/* Your scoped styles */
-</style>
