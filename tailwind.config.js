@@ -14,7 +14,7 @@ export default {
       },
       height: {
         taskWrap: 'calc(100% - 160px)',
-        taskWrap1: 'calc(100% - 104px)',
+        taskWrap1: 'calc(100% - 40px)',
         settings: 'calc(100% - 128px)',
         settings1: 'calc(100% - 24px)'
       },

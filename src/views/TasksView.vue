@@ -13,7 +13,7 @@
 
       <template v-else>
         <div class="px-6 h-taskWrap1" v-if="taskSortered.length !== 0">
-          <div class="mb-4 pt-24">
+          <div class="mb-4 pt-8">
             <div class="w-full">
               <div class="text-3xl font-bold mb-4 text-center w-full">
                 {{ userStore.displayName ? `${userStore.displayName}'s` : 'Your' }} tasks ({{
@@ -45,7 +45,7 @@
         </div>
       </template>
       <div
-        class="block sm:hidden md:hidden lg:hidden bg-white dark:bg-gray-800 p-6 w-full fixed bottom-0"
+        class="block sm:hidden lg:hidden dark:bg-gray-800 p-6 w-full fixed bottom-0"
       >
         <button
           @click="openCreateModal()"

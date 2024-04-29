@@ -1,5 +1,5 @@
 <template>
-<nav class="flex items-center justify-between flex-wrap dark:bg-gray-700 fixed w-full px-6 pt-4 pb-2 z-30">
+<nav class="flex items-center justify-between flex-wrap fixed w-full px-6 pt-4 pb-2 z-30">
   <div class="flex items-center w-full pb-2 justify-between h-12">
     <div class="flex items-center space-x-4">
       <img src="@/assets/logo.svg" class="w-10 h-10 sm:mx-auto" />
