@@ -39,7 +39,7 @@
           class="pt-32 sm:pt-24 max-w-160 mx-auto w-full h-screen"
           v-else-if="taskSortered.length === 0"
         >
-          <div class="pb-6 px-6 overflow-y-auto h-settings sm:h-settings1 flex items-center">
+          <div class="pb-6 px-6 overflow-y-auto h-auto flex items-center">
             <TasksEmptyState />
           </div>
         </div>
