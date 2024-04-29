@@ -14,7 +14,7 @@ const userStore = useUserStore()
 const toastStore = useToastStore()
 const isModalVisible = ref(false)
 const inputType = ref('text')
-const dialogTitle = ref('Edit Name')
+const dialogTitle = ref('')
 const labelTitle = ref('')
 const errorMsg = ref('')
 const text = ref('')
@@ -61,12 +61,12 @@ const onClickChangeName = () => {
   isModalVisible.value = true
   inputType.value = 'text'
   dialogTitle.value = 'Update name'
-  labelTitle.value = 'Full Name *'
+  labelTitle.value = 'Name *'
   errorMsg.value = 'Name is required'
   text.value = displayName.value
-  validateRule.value = {
-    required: helpers.withMessage('Name cannot be empty', required)
-  }
+  // validateRule.value = {
+  //   required: helpers.withMessage('Name cannot be empty', required)
+  // }
 }
 
 const onClickChangeEmail = () => {
@@ -146,7 +146,7 @@ const onLogoutClick = async () => {
         <div>
           <p class="text-left font-bold text-lg">Name</p>
           <div class="flex flex-row justify-between items-center">
-            <p class="break-all">{{ displayName }}</p>
+            <p class="break-all">{{ displayName ? displayName : '-' }}</p>
             <button
               @click="onClickChangeName"
               class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
@@ -158,7 +158,7 @@ const onLogoutClick = async () => {
         <div>
           <p class="text-left font-bold text-lg">Email</p>
           <div class="flex flex-row justify-between items-center">
-            <p class="break-all">{{ user && user.email }}</p>
+            <p class="break-all">{{ user.email }}</p>
             <button
               @click="onClickChangeEmail"
               class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
