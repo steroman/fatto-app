@@ -1,7 +1,6 @@
 <template>
-  <main class="container mx-auto">
-    <NavBar />
-    <div class="h-screen max-w-160 mx-auto">
+      <NavBar />
+    <div class="pt-24 sm:pt-24 max-w-160 mx-auto w-full h-screen">
       <button
         @click="openCreateModal()"
         class="fixed right-6 top-24 hidden sm:block md:block lg:block h-12 ml-4 bg-primary hover:bg-hover dark:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl py-2 px-4 hover:shadow-md"
@@ -9,7 +8,7 @@
         Add task
       </button>
       <p v-if="loadingTask" class="pt-56 px-6 max-w-120 mx-auto w-full h-screen">
-        Loading tasks...
+        Loading tasks…
       </p>
 
       <template v-else>
@@ -75,7 +74,6 @@
       }"
       :save="saveEditedTask"
     />
-  </main>
 </template>
 
 <script setup>

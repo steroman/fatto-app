@@ -3,11 +3,7 @@
     class="flex items-center justify-between flex-wrap bg-primary dark:bg-gray-700 fixed w-full px-6 pt-4 pb-2 shadow-md z-30"
   >
     <div class="flex items-center w-full pb-2 justify-between text-white h-12">
-      <!-- <router-link to="/tasks" v-if="isSettings"
-                  :class="['bg-transparent text-white hover:text-gray-100 hover:bg-hover dark:hover:bg-gray-800 rounded-full w-10 h-10 p-2 mr-2', isSettings? 'block sm:hidden md:hidden lg:hidden' : '']"><i
-                      class="material-icons">arrow_back</i></router-link> -->
       <span :class="['font-semibold text-xl tracking-tight']">DoToo</span>
-      <!-- <span class="w-full font-semibold text-xl text-white text-left block sm:hidden md:hidden lg:hidden">{{ isSettings ? "Settings" : ((userStore.displayName ? `${userStore.displayName}'s ` : "Your ") + `tasks ( ${taskSortered.length} )` ) }}</span> -->
       <button
         @click="onMenuClick"
         v-if="!isSettings"
