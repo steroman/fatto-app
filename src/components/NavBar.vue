@@ -3,7 +3,7 @@
   <div class="flex items-center w-full pb-2 justify-between h-12">
     <div class="flex items-center space-x-4">
       <img src="@/assets/logo.svg" class="w-10 h-10 sm:mx-auto" />
-      <span class="font-semibold text-xl tracking-tight hidden sm:block">DoToo</span>
+      <span class="font-semibold text-xl tracking-tight hidden sm:block">Fatto</span>
     </div>
     <button
       @click="onMenuClick"

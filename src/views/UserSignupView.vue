@@ -74,8 +74,8 @@ async function signUp() {
 
 <template>
   <div class="pt-10 px-6 max-w-120 mx-auto w-full h-screen" v-if="!confirmationSent">
-    <h1 class="text-3xl font-bold text-center mb-2">Welcome to DoToo</h1>
-    <p class="text-lg text-center mb-4">Create an account to start using DoToo for free.</p>
+    <h1 class="text-3xl font-bold text-center mb-2">Welcome to Fatto</h1>
+    <p class="text-lg text-center mb-4">Create an account to start using Fatto for free.</p>
     <form @submit.prevent="handleSubmit" class="pb-10">
       <div class="space-y-4 mb-6">
         <div class="space-y-1">
@@ -150,7 +150,7 @@ async function signUp() {
     <h1 class="text-3xl font-bold text-center mb-4">Check your inbox</h1>
     <p class="text-lg text-center mb-8">
       We sent an email to <strong>{{ form.email }}</strong
-      >. <br />Open the link in the email to verify your account and start using DoToo.
+      >. <br />Open the link in the email to verify your account and start using Fatto.
     </p>
     <router-link
       to="/"
