@@ -16,7 +16,7 @@
       @click="onLogoutClick"
       :class="[
         isSettings ? 'sm:block md:block lg:block' : '',
-        'hidden w-20 h-10 bg-white text-primary dark:text-white hover:bg-gray-200 hover:text-hover dark:bg-gray-800 dark:hover:bg-gray-600 rounded-md'
+        'hidden w-auto h-10 bg-primary text-white dark:text-white hover:bg-gray-200 hover:text-white dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg text-xl font-semibold text-center px-3 hover:shadow-md'
       ]"
     >
       Log out
