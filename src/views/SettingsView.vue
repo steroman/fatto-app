@@ -36,16 +36,16 @@ const saveText = async (newText) => {
     let newData = {}
     if (inputType.value === 'text') {
       newData = { data: { display_name: newText } }
-      toastMessage.value = 'Attempt to name change successed'
-      errorMsg.value = 'Attempt to name change failed'
+      toastMessage.value = 'Name changed successfully'
+      errorMsg.value = 'Couldn\'t update your name. Try again.'
     } else if (inputType.value === 'email') {
       newData = { email: newText }
-      toastMessage.value = 'Verity your new email'
-      errorMsg.value = 'Attempt to email change failed'
+      toastMessage.value = 'Check your inbox to complete the email change'
+      errorMsg.value = 'Couldn\'t update your email. Try again.'
     } else if (inputType.value === 'password') {
       newData = { password: newText }
-      toastMessage.value = 'Attempt to password change successed'
-      errorMsg.value = 'Attempt to password change failed'
+      toastMessage.value = 'Password changed successfully'
+      errorMsg.value = 'Couldn\'t update your password. Try again.'
     }
     await userStore.updateUserData(newData)
     isModalVisible.value = false
