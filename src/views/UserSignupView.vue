@@ -1,11 +1,11 @@
 <template>
-  <div class="pt-10 px-6 max-w-120 mx-auto w-full h-screen" v-if="!confirmationSent">
+  <div class="pt-28 px-6 max-w-120 mx-auto w-full h-screen" v-if="!confirmationSent">
     <h1 class="text-3xl font-bold text-center mb-2">Welcome to Fatto</h1>
     <p class="text-lg text-center mb-4">Create an account to start using Fatto for free.</p>
     <form @submit.prevent="handleSubmit" class="pb-10">
       <div class="space-y-4 mb-6">
         <div class="space-y-1">
-          <label class="font-medium text-lg text-left w-full block" for="name">Full Name *</label>
+          <label class="font-medium text-lg text-left w-full block" for="name">Name *</label>
           <input
             type="text"
             v-model="form.name"
@@ -46,7 +46,7 @@
         </div>
         <div class="space-y-1">
           <label class="font-medium text-lg text-left w-full block" for="cofirm-password"
-            >Confirm Password *</label
+            >Confirm password *</label
           >
           <input
             type="password"
@@ -63,7 +63,7 @@
         type="submit"
         class="w-full h-14 mb-2 bg-primary dark:bg-gray-700 hover:bg-hover dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
       >
-        Sign Up
+        Sign up
       </button>
       <span
         :class="['block text-red-500 text-sm text-center', formIsValid ? 'invisible' : 'visible']"

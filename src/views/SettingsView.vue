@@ -129,7 +129,7 @@ const onLogoutClick = async () => {
 
 <template>
   <NavBar />
-  <div class="pt-24 sm:pt-24 max-w-160 mx-auto w-full h-screen">
+  <div class="pt-28 px-6 max-w-160 mx-auto w-full h-screen">
     <div class="flex-row flex px-6">
       <router-link
         to="/tasks"

@@ -99,7 +99,7 @@ async function handleSubmit() {
       <button
         class="w-full h-14 mt-2 bg-primary dark:bg-gray-700 hover:bg-hover dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
       >
-        Sign In
+        Log in
       </button>
       <span
         :class="['block text-red-500 text-sm text-center', success ? 'invisible' : 'visible']"
