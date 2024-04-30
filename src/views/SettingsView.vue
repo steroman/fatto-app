@@ -162,8 +162,9 @@ const onClickChangeName = () => {
   isModalVisible.value = true
   inputType.value = 'text'
   dialogTitle.value = 'Update name'
-  labelTitle.value = 'Name *'
+  labelTitle.value = 'Name (optional)'
   errorMsg.value = 'Name is required'
+  helperText.value = 'Leave blank to delete your name'
   text.value = displayName.value
   // validateRule.value = {
   //   required: helpers.withMessage('Name cannot be empty', required)
@@ -174,12 +175,11 @@ const onClickChangeEmail = () => {
   isModalVisible.value = true
   inputType.value = 'email'
   dialogTitle.value = 'Update email'
-  labelTitle.value = 'Email Address *'
-  errorMsg.value = 'Enter valid email address'
+  labelTitle.value = 'Email *'
   text.value = user.value.email
   validateRule.value = {
-    required: helpers.withMessage('Email address cannot be empty', required),
-    email: helpers.withMessage('Enter correct email address', email)
+    required: helpers.withMessage('Enter an email', required),
+    email: helpers.withMessage('Use the correct email format', email)
   }
 }
 
@@ -191,8 +191,8 @@ const onClickChangePassword = () => {
   helperText.value = 'Minimum 6 characters'
   ;(errorMsg.value = 'Password is required'),
     (validateRule.value = {
-      required: helpers.withMessage('Password cannot be empty', required),
-      minLength: helpers.withMessage('Password must be longer than 6 characters', minLength(6))
+      required: helpers.withMessage('Enter a password', required),
+      minLength: helpers.withMessage('The password must be at least 6 characters', minLength(6))
     })
 }
 

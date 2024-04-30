@@ -59,17 +59,17 @@
     <EditModal
       v-if="isModalVisible"
       type="text"
-      :dialogTitle="editedTask ? 'Edit task' : 'Create task'"
+      :dialogTitle="editedTask ? 'Edit task' : 'Add task'"
       labelTitle="Title *"
       errorMsg="Enter a task title"
-      helper="Minimum 3 characters"
+      helperText="Minimum 3 characters"
       :show="isModalVisible"
       @show="showModal(value)"
       :value="editedTask ? editedTask.title : ''"
       :validateRule="{
-        required: helpers.withMessage('Task title cannot be empty', required),
+        required: helpers.withMessage('Enter a title', required),
         minLength: helpers.withMessage(
-          'Task title cannot be shorter than 3 characters',
+          'The title can\'t be shorter than 3 characters',
           minLength(3)
         )
       }"
