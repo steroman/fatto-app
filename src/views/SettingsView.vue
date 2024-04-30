@@ -88,6 +88,7 @@
     :dialogTitle="dialogTitle"
     :labelTitle="labelTitle"
     :errorMsg="errorMsg"
+    :helperText="helperText"
     :show="isModalVisible"
     @show="showModal(value)"
     :value="text"
@@ -115,6 +116,7 @@ const isModalVisible = ref(false)
 const inputType = ref('text')
 const dialogTitle = ref('')
 const labelTitle = ref('')
+const helperText = ref('')
 const errorMsg = ref('')
 const text = ref('')
 const validateRule = ref({})
@@ -186,6 +188,7 @@ const onClickChangePassword = () => {
   inputType.value = 'password'
   dialogTitle.value = 'Update password'
   labelTitle.value = 'Password *'
+  helperText.value = 'Minimum 6 characters'
   ;(errorMsg.value = 'Password is required'),
     (validateRule.value = {
       required: helpers.withMessage('Password cannot be empty', required),
