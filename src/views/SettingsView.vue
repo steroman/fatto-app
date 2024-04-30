@@ -158,7 +158,7 @@ const onLogoutClick = async () => {
         <div>
           <p class="text-left font-bold text-lg">Email</p>
           <div class="flex flex-row justify-between items-center">
-            <p class="break-all">{{ user.email }}</p>
+            <p class="break-all">{{ user && user.email ? user.email : '-' }}</p>
             <button
               @click="onClickChangeEmail"
               class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
