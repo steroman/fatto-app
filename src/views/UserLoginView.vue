@@ -63,6 +63,7 @@ async function handleSubmit() {
 
 <template>
   <div class="pt-28 px-6 max-w-120 mx-auto w-full h-screen">
+    <img src="@/assets/logo.svg" class="w-48 mx-auto mb-8" />
     <h1 class="text-3xl font-bold text-center mb-2">Log in to Fatto</h1>
     <form @submit.prevent="handleSubmit" class="pb-28">
       <div class="space-y-4 mb-6 mt-4">
