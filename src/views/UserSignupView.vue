@@ -1,77 +1,3 @@
-<script setup>
-import { ref, reactive, computed } from 'vue'
-import { useUserStore } from '@/stores/userStore'
-import { useVuelidate } from '@vuelidate/core'
-import { required, email, sameAs, minLength, helpers } from '@vuelidate/validators'
-
-const userStore = useUserStore()
-
-const message = ref('')
-const success = ref(true)
-
-const form = reactive({
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: ''
-})
-
-// Define form validation rules
-const rules = computed(() => {
-  return {
-    name: {
-      required: helpers.withMessage('Name cannot be empty', required)
-    },
-    email: {
-      required: helpers.withMessage('Email address cannot be empty', required),
-      email: helpers.withMessage('Enter correct email address', email)
-    }, // Email is required and must be a valid email address
-    password: {
-      required: helpers.withMessage('Password cannot be empty', required),
-      minLength: helpers.withMessage('Password must be longer than 6 characters', minLength(6))
-    }, // Password is required
-    confirmPassword: {
-      required: helpers.withMessage('Cofirm password cannot be empty', required),
-      sameAsPassword: helpers.withMessage('Retype password', sameAs(form.password))
-    } // Password confirmation is required
-  }
-})
-
-// Initialize vuelidate with form and rules
-const v$ = useVuelidate(rules, form)
-
-// Initialize confirmationSent flag
-const confirmationSent = ref(false)
-
-const formIsValid = ref(true) // Track the form validity
-// Function to handle sign-up submission
-async function handleSubmit() {
-  // Validate the form fields
-  const result = await v$.value.$validate()
-  formIsValid.value = result // Update form validity
-  if (!result) {
-    // If there are errors in the form, show an alert indicating that the form is invalid
-    formIsValid.value = false
-    success.value = false
-    message.value = 'Enter valid information.'
-  } else {
-    // If the form is valid, perform some action with the form data
-    try {
-      await signUp()
-    } catch (err) {
-      message.value = err.message
-      success.value = false
-    }
-  }
-}
-
-// Function to sign up the user
-async function signUp() {
-  confirmationSent.value = true
-  return await userStore.createUser(form.email, form.password, form.name)
-}
-</script>
-
 <template>
   <div class="pt-10 px-6 max-w-120 mx-auto w-full h-screen" v-if="!confirmationSent">
     <h1 class="text-3xl font-bold text-center mb-2">Welcome to Fatto</h1>
@@ -138,8 +64,7 @@ async function signUp() {
       </button>
       <span
         :class="['block text-red-500 text-sm text-center', formIsValid ? 'invisible' : 'visible']"
-        >Fix errors and try again.</span
-      >
+      >{{ message }}</span>
       <p class="mb-2 mt-2">
         Already got an account?
         <router-link to="/login" class="px-1 text-primary hover:text-hover">Log in</router-link>
@@ -159,3 +84,80 @@ async function signUp() {
     >
   </div>
 </template>
+
+<script setup>
+import { ref, reactive, computed } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+import { useVuelidate } from '@vuelidate/core'
+import { required, email, sameAs, minLength, helpers } from '@vuelidate/validators'
+
+const userStore = useUserStore()
+
+const message = ref('')
+const formIsValid = ref(true)
+
+const form = reactive({
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+})
+
+// Define form validation rules
+const rules = computed(() => {
+  return {
+    name: {
+      required: helpers.withMessage('Name cannot be empty', required)
+    },
+    email: {
+      required: helpers.withMessage('Email address cannot be empty', required),
+      email: helpers.withMessage('Enter correct email address', email)
+    }, // Email is required and must be a valid email address
+    password: {
+      required: helpers.withMessage('Password cannot be empty', required),
+      minLength: helpers.withMessage('Password must be longer than 6 characters', minLength(6))
+    }, // Password is required
+    confirmPassword: {
+      required: helpers.withMessage('Confirm password cannot be empty', required),
+      sameAsPassword: helpers.withMessage('Retype password', sameAs(form.password))
+    } // Password confirmation is required
+  }
+})
+
+// Initialize vuelidate with form and rules
+const v$ = useVuelidate(rules, form)
+
+// Initialize confirmationSent flag
+const confirmationSent = ref(false)
+
+// Function to handle sign-up submission
+async function handleSubmit() {
+  // Validate the form fields
+  const result = await v$.value.$validate()
+  formIsValid.value = result // Update form validity
+  if (!result) {
+    // If there are errors in the form, show an alert indicating that the form is invalid
+    formIsValid.value = false
+    message.value = 'Fix errors and try again.'
+  } else {
+    // If the form is valid, perform some action with the form data
+    try {
+      await signUp()
+    } catch (err) {
+      message.value = 'An error occurred. Please try again.'
+      formIsValid.value = false
+    }
+  }
+}
+
+// Function to sign up the user
+async function signUp() {
+  try {
+    confirmationSent.value = true
+    await userStore.createUser(form.email, form.password, form.name)
+  } catch (error) {
+    message.value = error.message
+    formIsValid.value = false
+  }
+}
+</script>
