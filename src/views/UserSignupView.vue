@@ -37,9 +37,12 @@
             v-model="form.password"
             :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.password.$error ? 'outline-red-300' : ''} ${v$.password.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
           />
-          <span v-if="v$.password.$error" class="block text-red-500 text-sm text-left">{{
-            v$.password.$errors[0].$message
-          }}</span>
+          <span v-if="!v$.password.$error && !v$.password.$errors.length" class="block text-sm text-left"
+>Minimum 6 characters</span
+          >
+          <span v-if="v$.password.$error" class="block text-red-500 text-sm text-left"
+            >{{ v$.password.$errors[0].$message }}</span
+          >
         </div>
         <div class="space-y-1">
           <label class="font-medium text-lg text-left w-full block" for="cofirm-password"
