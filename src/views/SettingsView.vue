@@ -1,3 +1,102 @@
+<template>
+  <NavBar />
+  <div class="pt-28 px-6 max-w-160 mx-auto w-full h-screen">
+    <div class="flex-row flex px-6">
+      <router-link
+        to="/tasks"
+        class="bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full w-10 h-10 p-2 mr-2"
+        ><i class="material-icons">arrow_back</i></router-link
+      >
+      <h1 class="text-3xl w-full font-bold text-cennter mb-4 pr-12">Settings</h1>
+    </div>
+    <div class="h-min space-y-4">
+      <div
+        class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
+      >
+        <p class="text-lg text-left mb-8">Account</p>
+        <div>
+          <p class="text-left font-bold text-lg">Name</p>
+          <div class="flex flex-row justify-between items-center">
+            <p class="break-all">{{ displayName ? displayName : '-' }}</p>
+            <button
+              @click="onClickChangeName"
+              class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
+            >
+              Change
+            </button>
+          </div>
+        </div>
+        <div>
+          <p class="text-left font-bold text-lg">Email</p>
+          <div class="flex flex-row justify-between items-center">
+            <p class="break-all">{{ user && user.email ? user.email : '-' }}</p>
+            <button
+              @click="onClickChangeEmail"
+              class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
+            >
+              Change
+            </button>
+          </div>
+        </div>
+        <div>
+          <p class="text-left font-bold text-lg">Password</p>
+          <div class="flex flex-row justify-between items-center">
+            <p class="break-all">••••••••••••</p>
+            <button
+              @click="onClickChangePassword"
+              class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
+            >
+              Change
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
+      >
+        <p class="text-lg text-left mb-8">Appearance</p>
+        <div class="space-y-4">
+          <div class="flex flex-row justify-between items-center">
+            <p>Hide completed tasks</p>
+            <ToggleSwitch
+              :isChecked="hideCompletedSetting"
+              @change="handleHideTasksSettingChange"
+            />
+          </div>
+          <div class="flex flex-row justify-between items-center">
+            <p>Dark mode</p>
+            <ToggleSwitch :isChecked="isDarkMode" @change="handleDarkModeChange" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log out button and container -->
+  <div class="block sm:hidden md:hidden lg:hidden fixed bg-secondary dark:bg-gray-800 p-6 w-full bottom-0 inset-x-0">
+    <button
+      @click="onLogoutClick"
+      class="w-full h-12 mb-2 bg-primary hover:bg-hover dark:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-md p-3 hover:shadow-md"
+    >
+      Log out
+    </button>
+  </div>
+
+  <EditModal
+    v-if="isModalVisible"
+    :type="inputType"
+    :dialogTitle="dialogTitle"
+    :labelTitle="labelTitle"
+    :errorMsg="errorMsg"
+    :show="isModalVisible"
+    @show="showModal(value)"
+    :value="text"
+    :showErrorInModal="showErrorInModal"
+    :validateRule="validateRule"
+    :save="saveText"
+  />
+</template>
+
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
@@ -121,105 +220,9 @@ const handleDarkModeChange = async (value) => {
     toastStore.showToast(false, 'Change theme failed')
   }
 }
+
 const onLogoutClick = async () => {
   router.push('/login')
   await userStore.signOut()
 }
 </script>
-
-<template>
-  <NavBar />
-  <div class="pt-28 px-6 max-w-160 mx-auto w-full h-screen">
-    <div class="flex-row flex px-6">
-      <router-link
-        to="/tasks"
-        class="bg-transparen hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full w-10 h-10 p-2 mr-2"
-        ><i class="material-icons">arrow_back</i></router-link
-      >
-      <h1 class="text-3xl w-full font-bold text-cennter mb-4 pr-12">Settings</h1>
-    </div>
-    <div class="h-min space-y-4">
-      <div
-        class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
-      >
-        <p class="text-lg text-left mb-8">Account</p>
-        <div>
-          <p class="text-left font-bold text-lg">Name</p>
-          <div class="flex flex-row justify-between items-center">
-            <p class="break-all">{{ displayName ? displayName : '-' }}</p>
-            <button
-              @click="onClickChangeName"
-              class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
-            >
-              Change
-            </button>
-          </div>
-        </div>
-        <div>
-          <p class="text-left font-bold text-lg">Email</p>
-          <div class="flex flex-row justify-between items-center">
-            <p class="break-all">{{ user && user.email ? user.email : '-' }}</p>
-            <button
-              @click="onClickChangeEmail"
-              class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
-            >
-              Change
-            </button>
-          </div>
-        </div>
-        <div>
-          <p class="text-left font-bold text-lg">Password</p>
-          <div class="flex flex-row justify-between items-center">
-            <p class="break-all">••••••••••••</p>
-            <button
-              @click="onClickChangePassword"
-              class="bg-transparent hover:underline text-primary hover:text-hover rounded-lg text-center font-semibold text-sm"
-            >
-              Change
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
-      >
-        <p class="text-lg text-left mb-8">Appearance</p>
-        <div class="space-y-4">
-          <div class="flex flex-row justify-between items-center">
-            <p>Hide completed tasks</p>
-            <ToggleSwitch
-              :isChecked="hideCompletedSetting"
-              @change="handleHideTasksSettingChange"
-            />
-          </div>
-          <div class="flex flex-row justify-between items-center">
-            <p>Dark mode</p>
-            <ToggleSwitch :isChecked="isDarkMode" @change="handleDarkModeChange" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="bg-gray-50 dark:bg-gray-800 px-4 py-3 sm:px-6 flex flex-col sm:flex-row-reverse"
-    >
-      <button
-        @click="onLogoutClick"
-        class="w-full h-12 mb-2 bg-primary hover:bg-hover dark:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-md p-3 hover:shadow-md"
-      >Log out</button>
-    </div>
-  </div>
-  <EditModal
-    v-if="isModalVisible"
-    :type="inputType"
-    :dialogTitle="dialogTitle"
-    :labelTitle="labelTitle"
-    :errorMsg="errorMsg"
-    :show="isModalVisible"
-    @show="showModal(value)"
-    :value="text"
-    :showErrorInModal="showErrorInModal"
-    :validateRule="validateRule"
-    :save="saveText"
-  />
-</template>
