@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
+import PageNotFound from '@/views/PageNotFound.vue'
 // import { supabase } from '@/lib/supabaseClient'
 import { useUserStore } from '@/stores/userStore'
 
@@ -19,17 +20,17 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/UserLogin.vue')
+      component: () => import('@/views/UserLoginView.vue')
     },
     {
       path: '/signup',
       name: 'signup',
-      component: () => import('@/views/UserSignup.vue')
+      component: () => import('@/views/UserSignupView.vue')
     },
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      component: () => import('@/views/ForgotPassword.vue')
+      component: () => import('@/views/ForgotPasswordView.vue')
     },
     {
       path: '/tasks',
@@ -40,7 +41,7 @@ const router = createRouter({
     {
       path: '/reset-password',
       name: 'reset-password',
-      component: () => import('@/views/ResetPassword.vue'),
+      component: () => import('@/views/ResetPasswordView.vue'),
       meta: { requiresAuth: true }
     },
     {
@@ -48,6 +49,11 @@ const router = createRouter({
       name: 'settings',
       component: () => import('@/views/SettingsView.vue'),
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'page-not-found',
+      component: () => import('@/views/PageNotFound.vue'),
     }
   ]
 })
@@ -60,7 +66,7 @@ router.beforeEach(async (to, from, next) => {
 
   // console.log('Current route:', to.path)
   // console.log('Authenticated user:', userStore.user)
-  
+
   if (userStore.user?.recovery_sent_at && to.path !== '/reset-password') {
     next('/reset-password')
   } else {
