@@ -47,16 +47,16 @@
           >
             <button
               type="submit"
-              class="w-full h-12 mb-2 ml-4 bg-green-400 dark:bg-primary dark:hover:bg-hover hover:bg-green-500 text-white hover:text-white rounded-lg text-center font-semibold text-md p-3 hover:shadow-md"
+              class="w-full h-12 mb-2 bg-primary hover:bg-hover dark:bg-primary dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-md p-3 hover:shadow-md"
             >
-              Ok
+              Save
             </button>
             <button
               type="button"
               @click="closeModal"
               class="w-full h-12 mb-2 bg-primary hover:bg-hover dark:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-md p-3 hover:shadow-md"
             >
-              Close
+              Cancel
             </button>
           </div>
         </form>
