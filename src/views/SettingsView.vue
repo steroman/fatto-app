@@ -197,12 +197,12 @@ const handleHideTasksSettingChange = async (value) => {
   try {
     await userStore.updateUserHideCompletedSetting(value)
     if (value) {
-      toastStore.showToast(true, 'Enabled hide completed tasks')
+      toastStore.showToast(true, 'Completed tasks hidden')
     } else {
-      toastStore.showToast(true, 'Disabled hide completed tasks')
+      toastStore.showToast(true, 'Completed tasks shown')
     }
   } catch (err) {
-    toastStore.showToast(false, 'Change failed')
+    toastStore.showToast(false, 'Couldn\'t change tasks appearance')
   }
 }
 
@@ -210,14 +210,14 @@ const handleDarkModeChange = async (value) => {
   try {
     await userStore.updateDarkMode(value)
     if (value) {
-      toastStore.showToast(true, 'Enabled Dark Mode')
+      toastStore.showToast(true, 'Dark mode on')
       document.documentElement.classList.add('dark')
     } else {
-      toastStore.showToast(true, 'Enabled Light Mode')
+      toastStore.showToast(true, 'Dark mode off')
       document.documentElement.classList.remove('dark')
     }
   } catch (err) {
-    toastStore.showToast(false, 'Change theme failed')
+    toastStore.showToast(false, 'Couldn\'t change theme')
   }
 }
 
