@@ -59,9 +59,10 @@
     <EditModal
       v-if="isModalVisible"
       type="text"
-      :dialogTitle="editedTask ? 'Edit task' : 'Create a task'"
-      labelTitle="Task Title *"
+      :dialogTitle="editedTask ? 'Edit task' : 'Create task'"
+      labelTitle="Title *"
       errorMsg="Enter a task title"
+      helper="Minimum 3 characters"
       :show="isModalVisible"
       @show="showModal(value)"
       :value="editedTask ? editedTask.title : ''"

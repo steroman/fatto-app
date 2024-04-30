@@ -201,14 +201,12 @@ const onLogoutClick = async () => {
     </div>
 
     <div
-      class="block sm:hidden md:hidden lg:hidden fixed bg-white dark:bg-gray-800 p-6 w-full bottom-0"
+      class="bg-gray-50 dark:bg-gray-800 px-4 py-3 sm:px-6 flex flex-col sm:flex-row-reverse"
     >
       <button
         @click="onLogoutClick"
-        class="w-full h-14 bg-primary hover:bg-hover text-white dark:bg-gray-700 dark:hover:bg-gray-600 hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
-      >
-        Log out
-      </button>
+        class="w-full h-12 mb-2 bg-primary hover:bg-hover dark:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-md p-3 hover:shadow-md"
+      >Log out</button>
     </div>
   </div>
   <EditModal

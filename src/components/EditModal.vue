@@ -1,5 +1,4 @@
 <template>
-  <transition name="modal">
     <div
       :class="['fixed z-10 inset-0 overflow-y-auto']"
       aria-labelledby="modal-title"
@@ -29,8 +28,12 @@
                   :type="type"
                   v-model="form.title"
                   id="title"
+                  :helper="helper"
                   :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.title.$error ? 'outline-red-300' : 'outline-gray-300'} ${v$.title.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
                 />
+                <span v-if="!v$.title.$error && !v$.title.$errors.length" class="block text-sm text-left"
+>{{ helper }}</span
+          >
                 <span v-if="v$.title.$error" class="block text-red-500 text-sm text-left">{{
                   v$.title.$errors[0].$message
                 }}</span>
@@ -43,7 +46,7 @@
             </div>
           </div>
           <div
-            class="bg-gray-50 dark:bg-gray-800 px-4 py-3 sm:px-6 flex flex-col sm:flex-row-reverse"
+            class="bg-white dark:bg-gray-800 px-4 py-3 sm:px-6 flex flex-col sm:flex-row-reverse"
           >
             <button
               type="submit"
@@ -54,7 +57,7 @@
             <button
               type="button"
               @click="closeModal"
-              class="w-full h-12 mb-2 bg-primary hover:bg-hover dark:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-md p-3 hover:shadow-md"
+              class="w-full h-12 mb-2 bg-secondary hover:bg-hover dark:bg-gray-700 dark:hover:bg-gray-600 text-black dark:text-white hover:text-white rounded-lg text-center font-semibold text-md p-3 hover:shadow-md"
             >
               Cancel
             </button>
@@ -62,15 +65,11 @@
         </form>
       </div>
     </div>
-  </transition>
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onMounted, onUpdated } from 'vue'
-import { useUserStore } from '@/stores/userStore'
+import { reactive, computed } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, helpers } from '@vuelidate/validators'
-import { fromJSON } from 'postcss'
 
 const props = defineProps({
   type: {
@@ -87,6 +86,9 @@ const props = defineProps({
   labelTitle: {
     type: String,
     required: true
+  },
+  helper: {
+    type: String,
   },
   errorMsg: {
     type: String,
