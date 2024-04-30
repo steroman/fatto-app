@@ -94,7 +94,6 @@ const tasksStore = useTasksStore()
 const userStore = useUserStore()
 
 const { taskSortered } = storeToRefs(tasksStore)
-const { user } = storeToRefs(userStore)
 
 const isModalVisible = ref(false)
 const editedTask = ref(null)
@@ -140,7 +139,4 @@ const saveEditedTask = async (title) => {
   isModalVisible.value = false
 }
 
-const cancelEditModal = () => {
-  isModalVisible.value = false
-}
 </script>

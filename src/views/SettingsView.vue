@@ -136,9 +136,9 @@ const onLogoutClick = async () => {
         class="bg-transparen hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full w-10 h-10 p-2 mr-2"
         ><i class="material-icons">arrow_back</i></router-link
       >
-      <h1 class="text-3xl w-full font-bold text-cennter mb-4 pr-10">Settings</h1>
+      <h1 class="text-3xl w-full font-bold text-cennter mb-4 pr-12">Settings</h1>
     </div>
-    <div class="pb-6 px-6 overflow-y-auto h-settings sm:h-settings1">
+    <div class="h-min space-y-4">
       <div
         class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
       >
