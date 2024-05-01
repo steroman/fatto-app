@@ -1,7 +1,7 @@
 <template>
   <div class="pt-28 px-6 max-w-120 mx-auto w-full h-screen">
       <div v-if="!confirmationSent">
-          <h1 class="text-2xl font-bold text-center mb-4">Update password</h1>
+          <h1 class="text-3xl font-bold text-center mb-2">Update password</h1>
           <form @submit.prevent="handleSubmit">
               <div class="space-y-4 mb-6">
                   <div class="space-y-1">
@@ -19,7 +19,9 @@
               </div>
               <button
                   class="w-full h-14 mt-6 bg-primary hover:bg-hover text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md">Update password</button>
-              <span :class="['block text-red-500 text-sm text-left', success ? 'invisible' : 'visible']">{{message}}</span>
+                  <span :class="['block text-red-500 text-sm text-center mt-2', success ? 'invisible' : 'visible']">
+        {{ message }}
+      </span>
           </form>
       </div>
       <div v-if="confirmationSent">
@@ -53,13 +55,13 @@ const form = reactive({
 const rules = computed(() => {
   return {
       password: {
-          required: helpers.withMessage('Password cannot be empty', required),
-          minLength: helpers.withMessage('Password must be longer than 6 characters', minLength(6))
-      }, // Password is required
+          required: helpers.withMessage('Enter a password', required),
+          minLength: helpers.withMessage('The password must be at least 6 characters', minLength(6))
+      },
       password1: {
-          required: helpers.withMessage('Cofirm password cannot be empty', required),
-          sameAsPassword: helpers.withMessage('Retype password', sameAs(form.password))
-      } // Password confirmation is required
+          required: helpers.withMessage('Retype your new password', required),
+          sameAsPassword: helpers.withMessage('Passwords don\'t match', sameAs(form.password))
+      }
   }
 })
 
@@ -67,13 +69,18 @@ const v$ = useVuelidate(rules, form)
 
 const updatePassword = async () => {
   try {
-      await userStore.updateUserData({ password: form.password })
-      confirmationSent.value = true
+    await userStore.updateUserData({ password: form.password })
+    confirmationSent.value = true
   } catch (err) {
+    if (err.message === 'New password should be different from the old password.') {
+      message.value = 'The new password can\'t be the same as the old one. Choose a different one.'
+    } else {
       message.value = err.message
-      success.value = false
+    }
+    success.value = false
   }
 }
+
 
 const handleSubmit = async () => {
   success.value = true
@@ -82,7 +89,7 @@ const handleSubmit = async () => {
       success.value = true
       updatePassword()
   } else {
-      message.value = "Fix errors and try again."
+      message.value = "Fix errors and try again"
       success.value = false
   }
 }
