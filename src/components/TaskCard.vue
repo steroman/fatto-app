@@ -1,33 +1,59 @@
 <template>
-  <div :class="['bg-blue-200', task.is_complete ? 'bg-opacity-50 line-through' : '', 'rounded p-4 mb-4']">
-    <div class="flex justify-between items-center mb-2">
-      <div :class="['font-semibold', task.is_complete ? 'text-gray-500' : 'text-lg']">{{ task.title }}</div>
-      <div class="flex items-center">
-        <!-- Edit button -->
-        <button @click="openEditModal" class="focus:outline-none mr-2">
-          <img src="@/assets/icons/pencil-solid.svg" alt="Edit Task" class="w-4">
+  <div
+    :class="[
+      'bg-white dark:bg-gray-600 dark:hover:shadow-gray-400 dark:shadow-sm rounded-md shadow-md hover:shadow-xl px-4 py-5 h-fit',
+      task.is_complete ? 'line-through opacity-50' : ''
+    ]"
+  >
+    <div class="flex flex-row justify-between">
+      <div
+        class="text-primary font-semibold text-lg text-left max-w-taskWrap1 break-words hyphens-auto"
+      >
+        {{ formatTitle(task.title) }}
+      </div>
+      <div class="space-x-1 min-w-20">
+        <button
+          @click="openEditModal"
+          :class="[
+            'bg-transparent hover:bg-gray-200 dark:hover:bg-gray-800 rounded-full w-8 h-8 p-1',
+            task.is_complete ? 'text-gray-500' : 'text-primary hover:text-hover'
+          ]"
+        >
+          <i class="material-icons">edit</i>
         </button>
-
-        <!-- Completed button -->
-        <button @click="_handleTaskCompletion" class="focus:outline-none">
-          <i class="fa-solid" :class="getIconClass()"></i>
+        <button
+          @click="handleTaskCompletion"
+          :class="[
+            'bg-transparent hover:bg-gray-200 dark:hover:bg-gray-800 rounded-full w-8 h-8 p-1',
+            task.is_complete ? 'text-gray-500' : 'text-primary hover:text-hover'
+          ]"
+        >
+          <i class="material-icons">task_alt</i>
         </button>
       </div>
     </div>
-    <div class="flex justify-between align-items-end">
-      <div :class="['text-xs', task.is_complete ? 'text-gray-500' : 'text-gray-700']">Created on:<br/>{{ formatTimestamp(task.inserted_at) }}</div>
-      <button @click="_deleteTask" class="text-red-500"><i class="fa-solid fa-trash-can"></i></button>
+    <div class="flex flex-row justify-between">
+      <div class="font-medium text-sm self-end w-10/12 text-wrap break-words text-left">
+        Created On : {{ formatTimestamp(task.inserted_at) }}
+      </div>
+      <div class="flex items-end">
+        <button
+          @click="deleteTask"
+          :class="[
+            'bg-transparent hover:bg-gray-200 dark:hover:bg-gray-800 rounded-full w-8 h-8 p-1 mr-1',
+            task.is_complete ? 'text-gray-500' : 'text-primary hover:text-hover'
+          ]"
+        >
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineEmits } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
 
-const emit = defineEmits(['editTask'])
-
-// Define props for the component
 const props = defineProps({
   task: {
     type: Object,
@@ -35,11 +61,15 @@ const props = defineProps({
   }
 })
 
-// Initialize tasks store
+const formatTitle = (title) => {
+  return title.length > 15 ? `${title.substring(0, 15)} ...` : title
+}
+
+const emit = defineEmits(['edit'])
+
 const tasksStore = useTasksStore()
 
-// Function to toggle task completion status
-const _handleTaskCompletion = async () => {
+const handleTaskCompletion = async () => {
   const taskToUpdate = {
     ...props.task,
     is_complete: !props.task.is_complete
@@ -47,31 +77,16 @@ const _handleTaskCompletion = async () => {
   await tasksStore.updateExistingTask(taskToUpdate)
 }
 
-// Function to delete the task
-const _deleteTask = async () => {
+const deleteTask = async () => {
   await tasksStore.deleteExistingTask(props.task)
   tasksStore.fetchAllTasks()
 }
 
-// Function to format timestamp
 const formatTimestamp = (timestamp) => {
   return new Date(timestamp).toLocaleString()
 }
 
-const getIconClass = () => {
-  if (props.task.is_complete) {
-    return 'fa-check-circle text-green-500'
-  } else {
-    return 'fa-check-circle text-gray-500'
-  }
-}
-
-// Emit event to open edit modal
 const openEditModal = () => {
-  // Emit event with the task data
-  emit('editTask', props.task)
+  emit('edit', props.task)
 }
 </script>
-
-<style scoped>
-</style>

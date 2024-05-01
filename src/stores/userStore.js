@@ -13,17 +13,19 @@ import {
   fetchSortingPreference,
   updateSortingPreference,
   fetchHideCompletedSetting,
-  updateHideCompletedSetting
- } from '@/api/settingsApi'
-
+  updateHideCompletedSetting,
+  fetchDarkModeSetting,
+  updateDarkModeSetting
+} from '@/api/settingsApi'
 
 export const useUserStore = defineStore('user', {
   state: () => {
     // State
     const user = ref(null)
     const sortingPreference = ref('')
-    const hideCompletedSetting = ref(null)
+    const hideCompletedSetting = ref(false)
     const displayName = ref('')
+    const isDarkMode = ref(false)
     // Getters
 
     // Actions
@@ -38,10 +40,9 @@ export const useUserStore = defineStore('user', {
     async function signIn(email, password) {
       try {
         user.value = await login(email, password)
-        console.log('User info retrieved:', user.value)
       } catch (error) {
         console.error(error)
-        throw error  // Propagate the error to the component
+        throw error // Propagate the error to the component
       }
     }
 
@@ -63,20 +64,15 @@ export const useUserStore = defineStore('user', {
     }
 
     async function updateUserData(userData) {
-      console.log("Updating user data:", userData);
       try {
-        const response = await updateUser(userData);
-        console.log("Update user response:", response);
-        // Assuming response contains the updated user object
-        user.value = response.user;
+        const response = await updateUser(userData)
+        user.value = response.user
         displayName.value = user.value?.user_metadata?.display_name || ''
       } catch (error) {
-        console.error(error);
-        throw new Error(error.message);
+        console.error(error)
+        throw new Error(error.message)
       }
     }
-    
-    
 
     async function resetPassword(email) {
       try {
@@ -89,7 +85,7 @@ export const useUserStore = defineStore('user', {
     async function fetchUserSortingPreference() {
       try {
         const sortingPrefFetched = await fetchSortingPreference(user.value.id)
-        sortingPreference.value = sortingPrefFetched 
+        sortingPreference.value = sortingPrefFetched
       } catch (error) {
         console.error(error)
       }
@@ -115,8 +111,29 @@ export const useUserStore = defineStore('user', {
 
     async function updateUserHideCompletedSetting(newHideCompletedSetting) {
       try {
-        const updatedHideCompletedSetting = await updateHideCompletedSetting(user.value.id, newHideCompletedSetting)
+        const updatedHideCompletedSetting = await updateHideCompletedSetting(
+          user.value.id,
+          newHideCompletedSetting
+        )
         hideCompletedSetting.value = updatedHideCompletedSetting
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    async function fetchDarkMode() {
+      try {
+        const darkMode = await fetchDarkModeSetting(user.value.id)
+        isDarkMode.value = darkMode
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    async function updateDarkMode(newDarkMode) {
+      try {
+        const updatedDarkMode = await updateDarkModeSetting(user.value.id, newDarkMode)
+        isDarkMode.value = updatedDarkMode
       } catch (error) {
         console.error(error)
       }
@@ -132,6 +149,7 @@ export const useUserStore = defineStore('user', {
       sortingPreference,
       hideCompletedSetting,
       displayName,
+      isDarkMode,
       // Getters
 
       // Actions
@@ -144,7 +162,9 @@ export const useUserStore = defineStore('user', {
       fetchUserSortingPreference,
       updateUserSortingPreference,
       fetchUserHideCompletedSetting,
-      updateUserHideCompletedSetting
+      updateUserHideCompletedSetting,
+      fetchDarkMode,
+      updateDarkMode
       // changePassword
     }
   },
