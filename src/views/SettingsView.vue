@@ -1,7 +1,8 @@
 <template>
   <NavBar />
-  <div class="pt-28 px-6 max-w-160 mx-auto w-full h-screen">
-    <div class="flex-row flex px-6">
+  <div class="pt-16 max-w-160 mx-auto w-full h-screen">
+    <div class="mb-4 sm:pt-16 pt-8 p-6">
+      <div class="mb-4 sm:pt-16 flex">
       <router-link
         to="/tasks"
         class="bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full w-10 h-10 p-2 mr-2"
@@ -68,6 +69,7 @@
             <ToggleSwitch :isChecked="isDarkMode" @change="handleDarkModeChange" />
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>

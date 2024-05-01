@@ -4,7 +4,7 @@
 
 
 <template>
-  <div class="pt-28 px-6 max-w-120 mx-auto w-full h-screen">
+  <div class="pt-16 px-6 max-w-120 mx-auto w-full h-screen">
     <div class="mb-4 pt-8">
             <div class="w-full">
               <img src="@/assets/logo-broken.svg" class="w-48 mx-auto mb-8" />

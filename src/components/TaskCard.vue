@@ -9,7 +9,7 @@ const props = defineProps({
 })
 
 const formatTitle = (title) => {
-  return title.length > 25 ? `${title.substring(0, 25)} …` : title
+  return title.length > 12 ? `${title.substring(0, 12)} …` : title
 }
 
 const emit = defineEmits(['edit'])
@@ -52,7 +52,7 @@ const openEditModal = () => {
 <template>
   <div
     :class="[
-      'bg-white dark:bg-gray-600 dark:hover:shadow-gray-400 dark:shadow-sm rounded-md shadow-md hover:shadow-xl px-4 py-5 h-fit min-w-[350px]',
+      'bg-white dark:bg-gray-600 dark:hover:shadow-gray-400 dark:shadow-sm rounded-md shadow-md hover:shadow-xl px-4 py-5 h-fit',
       task.is_complete ? 'line-through opacity-50' : ''
     ]"
   >
