@@ -1,6 +1,6 @@
 <template>
   <div class="pt-28 px-6 max-w-120 mx-auto w-full h-screen" v-if="!confirmationSent">
-    <h1 class="text-3xl font-bold text-center mb-4">Password forgotten</h1>
+    <h1 class="text-3xl font-bold text-center mb-2">Password forgotten</h1>
     <p class="text-lg text-center mb-8">
       Enter your email address and we'll send you a link to reset your password.
     </p>
@@ -22,7 +22,7 @@
         type="submit"
         class="w-full h-14 mt-10 bg-primary dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-hover text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
       >
-        Send Link
+        Send link
       </button>
       <span
         :class="['block text-red-500 text-sm text-center', success ? 'invisible' : 'visible']"
