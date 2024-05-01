@@ -19,17 +19,17 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/UserLogin.vue')
+      component: () => import('@/views/UserLoginView.vue')
     },
     {
       path: '/signup',
       name: 'signup',
-      component: () => import('@/views/UserSignup.vue')
+      component: () => import('@/views/UserSignupView.vue')
     },
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      component: () => import('@/views/ForgotPassword.vue')
+      component: () => import('@/views/ForgotPasswordView.vue')
     },
     {
       path: '/tasks',
@@ -40,7 +40,7 @@ const router = createRouter({
     {
       path: '/reset-password',
       name: 'reset-password',
-      component: () => import('@/views/ResetPassword.vue'),
+      component: () => import('@/views/ResetPasswordView.vue'),
       meta: { requiresAuth: true }
     },
     {
@@ -60,7 +60,7 @@ router.beforeEach(async (to, from, next) => {
 
   // console.log('Current route:', to.path)
   // console.log('Authenticated user:', userStore.user)
-  
+
   if (userStore.user?.recovery_sent_at && to.path !== '/reset-password') {
     next('/reset-password')
   } else {

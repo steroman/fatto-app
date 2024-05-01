@@ -46,7 +46,7 @@ export const logout = async () => {
 
 export const resetPassWithEmail = async (email) => {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: 'http://localhost:5173/reset-password'
+    redirectTo: 'http://{{BASE_URL}}/reset-password'
   })
   if (error) {
     throw new Error(error.message)
