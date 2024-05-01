@@ -30,8 +30,18 @@ const deleteTask = async () => {
 }
 
 const formatTimestamp = (timestamp) => {
-  return new Date(timestamp).toLocaleString()
+  const date = new Date(timestamp);
+  const month = date.toLocaleString('en-US', { month: 'long' });
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+  const amPm = hour < 12 ? 'AM' : 'PM';
+  const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+  const formattedMinute = String(minute).padStart(2, '0');
+  return `${month} ${day}, ${year} at ${formattedHour}:${formattedMinute}${amPm}`;
 }
+
 
 const openEditModal = () => {
   emit('edit', props.task)
@@ -74,7 +84,7 @@ const openEditModal = () => {
     </div>
     <div class="flex flex-row justify-between">
       <div class="font-medium text-sm self-end w-10/12 text-wrap break-words text-left">
-        Created on: {{ formatTimestamp(task.inserted_at) }}
+        Created on {{ formatTimestamp(task.inserted_at) }}
       </div>
       <div class="flex items-end">
         <button
