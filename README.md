@@ -1,35 +1,72 @@
-# ih-todo-list
+# Fatto - A Vue3 to-do list app
 
-This template should help get you started developing with Vue 3 in Vite.
+![Fatto Logo](src/assets/logo.svg)
 
-## Recommended IDE Setup
+Fatto is a simple to-do list app built using Vue 3, HTML, and TailwindCSS. It provides a responsive user interface and uses the Vue Composition API.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Live demo
+You can see the Fatto app live at [Fatto App](https://fatto-app.netlify.app/). The app is deployed using Netlify.
 
-## Customize configuration
+## Table of contents
+1. [Live demo](#live-demo)
+2. [Table of contents](#table-of-contents)
+3. [Main features](#main-features)
+4. [Folder structure](#folder-structure)
+5. [Usage](#usage)
+6. [Contributing](#contributing)
+7. [License](#license)
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Main features
+- Full user authentication and authorization using Supabase
+- Responsive design for various devices using TailwindCSS
+- Pinya for state management
+- Task creation, update, and deletion
+- User account management, including name, email, and password changes
+- Forgot password functionality
+- Dark mode and sorting preference settings stored in Supabase
 
-## Project Setup
+## Folder structure
+The project's file structure is organized as follows:
 
-```sh
-npm install
+```
+└── 📁fatto-app
+    └── README.md
+    └── 📁src (Source files)
+        └── App.vue
+        └── 📁api (API functions)
+            └── userApi.js
+            └── …
+        └── 📁assets (Visual assets)
+            └── logo.svg
+            └── …
+        └── 📁components (Components integrated into the views)
+            └── TasksEmptyState.vue
+            └── TaskCard.vue
+            └── …
+        └── 📁lib
+            └── supabaseClient.js (Module for integrating with Supabase client)
+        └── main.js
+        └── 📁router (Router configuration)
+            └── index.js
+        └── 📁stores (Pinia stores for state management)
+            └── tasksStore.js
+            └── …
+        └── 📁views (Main pages of the app)
+            └── TasksView.vue
+            └── …
+    └── …
 ```
 
-### Compile and Hot-Reload for Development
+## Usage
+To run the Fatto app locally, follow these steps:
 
-```sh
-npm run dev
-```
+1. Clone the repository to your local machine.
+2. Run `npm install` in the root directory.
+3. Run `npm run dev` in the root directory.
+4. Open the local host URL in your browser.
 
-### Compile and Minify for Production
+## Contributing
+Contributions to enhance Fatto app are welcome. If you have suggestions, bug reports, or feature requests, feel free to open an issue or submit a pull request.
 
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+## License
+This project is licensed under the [MIT License](https://github.com/steroman/midproject/blob/main/LICENSE) License.
