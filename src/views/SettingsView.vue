@@ -53,7 +53,7 @@
         </div>
       </div>
       <div
-        class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
+        class="space-y-6 mb-24 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
       >
         <p class="text-lg text-left mb-8">Appearance</p>
         <div class="space-y-4">
