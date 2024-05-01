@@ -36,12 +36,12 @@ const signInAndRedirect = async () => {
   try {
     await userStore.signIn(form.email, form.password)
     router.push('/tasks')
-    toastStore.showToast(true, 'Sign In successful')
+    toastStore.showToast(true, 'Login successful')
   } catch (error) {
     if (error.message === 'Email not confirmed') {
       message.value = 'Email not verified. Verify it and try again.'
     } else if (error.message === 'Invalid login credentials') {
-      message.value = 'Invalid credentials. Try again.'
+      message.value = 'Wrong credentials. Try again.'
     } else {
       message.value = 'An error occurred. Please try again.'
     }

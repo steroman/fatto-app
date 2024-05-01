@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
+import PageNotFound from '@/views/PageNotFound.vue'
 // import { supabase } from '@/lib/supabaseClient'
 import { useUserStore } from '@/stores/userStore'
 
@@ -48,6 +49,11 @@ const router = createRouter({
       name: 'settings',
       component: () => import('@/views/SettingsView.vue'),
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'page-not-found',
+      component: () => import('@/views/PageNotFound.vue'),
     }
   ]
 })

@@ -1,3 +1,75 @@
+<script setup>
+import { ref, reactive, computed, watch, onMounted, onUpdated } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+import { useVuelidate } from '@vuelidate/core'
+import { required, helpers } from '@vuelidate/validators'
+
+const props = defineProps({
+  type: {
+    type: String,
+    required: true
+  },
+  showErrorInModal: {
+    type: Boolean
+  },
+  dialogTitle: {
+    type: String,
+    required: true
+  },
+  labelTitle: {
+    type: String,
+    required: true
+  },
+  helperText: {
+    type: String
+  },
+  errorMsg: {
+    type: String,
+    required: true
+  },
+  show: {
+    required: true
+  },
+  value: {
+    required: true
+  },
+  save: {
+    type: Function,
+    required: true
+  },
+  validateRule: {
+    type: Object,
+    required: true
+  }
+})
+
+const emit = defineEmits(['save', 'show'])
+
+const form = reactive({
+  title: props.value
+})
+
+const rules = computed(() => {
+  return {
+    title: props.validateRule
+  }
+})
+
+const closeModal = () => {
+  emit('show', false)
+}
+
+const v$ = useVuelidate(rules, form)
+
+async function handleSubmit() {
+  // Validate the form fields
+  const result = await v$.value.$validate()
+  if (result) {
+    props.save(form.title)
+  }
+}
+</script>
+
 <template>
   <div
     :class="['fixed z-10 inset-0 overflow-y-auto']"
@@ -67,76 +139,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, reactive, computed, watch, onMounted, onUpdated } from 'vue'
-import { useUserStore } from '@/stores/userStore'
-import { useVuelidate } from '@vuelidate/core'
-import { required, helpers } from '@vuelidate/validators'
-import { fromJSON } from 'postcss'
-
-const props = defineProps({
-  type: {
-    type: String,
-    required: true
-  },
-  showErrorInModal: {
-    type: Boolean
-  },
-  dialogTitle: {
-    type: String,
-    required: true
-  },
-  labelTitle: {
-    type: String,
-    required: true
-  },
-  helperText: {
-    type: String
-  },
-  errorMsg: {
-    type: String,
-    required: true
-  },
-  show: {
-    required: true
-  },
-  value: {
-    required: true
-  },
-  save: {
-    type: Function,
-    required: true
-  },
-  validateRule: {
-    type: Object,
-    required: true
-  }
-})
-
-const emit = defineEmits(['save', 'show'])
-
-const form = reactive({
-  title: props.value
-})
-
-const rules = computed(() => {
-  return {
-    title: props.validateRule
-  }
-})
-
-const closeModal = () => {
-  emit('show', false)
-}
-
-const v$ = useVuelidate(rules, form)
-
-async function handleSubmit() {
-  // Validate the form fields
-  const result = await v$.value.$validate()
-  if (result) {
-    props.save(form.title)
-  }
-}
-</script>

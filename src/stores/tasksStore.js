@@ -4,7 +4,7 @@ import { createTask, deleteTask, fetchTasks, updateTask } from '@/api/tasksApi'
 import { useUserStore } from '@/stores/userStore'
 
 export const SORT_OPTIONS = [
-  { label: 'Active first (Default)', value: 'id' },
+  { label: 'Internal ID (default)', value: 'id' },
   { label: 'Completed first', value: 'completed' },
   { label: 'Oldest', value: 'old' },
   { label: 'Newest', value: 'new' },
