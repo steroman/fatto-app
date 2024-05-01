@@ -31,16 +31,17 @@ const deleteTask = async () => {
 
 const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp);
-  const month = date.toLocaleString('en-US', { month: 'long' });
+  const monthShort = date.toLocaleString('en-US', { month: 'short' });
   const day = date.getDate();
   const year = date.getFullYear();
   const hour = date.getHours();
   const minute = date.getMinutes();
-  const amPm = hour < 12 ? 'AM' : 'PM';
+  const amPm = hour < 12 ? 'am' : 'pm';
   const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
   const formattedMinute = String(minute).padStart(2, '0');
-  return `${month} ${day}, ${year} at ${formattedHour}:${formattedMinute}${amPm}`;
+  return `${monthShort} ${day}, ${year} at ${formattedHour}:${formattedMinute} ${amPm}`;
 }
+
 
 
 const openEditModal = () => {
