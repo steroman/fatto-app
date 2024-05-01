@@ -28,6 +28,7 @@ You can see the Fatto app live at [Fatto App](https://fatto-app.netlify.app/). T
 ## Folder structure
 The project's file structure is organized as follows:
 
+```
 └── 📁fatto-app
     └── README.md
     └── 📁src (Source files)
@@ -54,7 +55,7 @@ The project's file structure is organized as follows:
             └── TasksView.vue
             └── …
     └── …
-
+```
 
 ## Usage
 To run the Fatto app locally, follow these steps:
