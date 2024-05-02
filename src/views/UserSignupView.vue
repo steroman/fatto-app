@@ -1,6 +1,6 @@
 <template>
   <div class="pt-16 px-6 max-w-120 mx-auto w-full h-screen" v-if="!confirmationSent">
-    <img src="@/assets/logo.svg" class="w-48 mx-auto mb-8" />
+    <img src="@/assets/logo.svg" class="w-12 mx-auto mb-4" />
     <h1 class="text-3xl font-bold text-center mb-2">Welcome to Fatto</h1>
     <p class="text-lg text-center mb-4">Create an account to start using Fatto for free.</p>
     <form @submit.prevent="handleSubmit" class="pb-10">
