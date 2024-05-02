@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-28 px-6 max-w-120 mx-auto w-full h-screen">
+  <div class="pt-16 px-6 max-w-120 mx-auto w-full h-screen">
       <div v-if="!confirmationSent">
           <h1 class="text-3xl font-bold text-center mb-2">Update password</h1>
           <form @submit.prevent="handleSubmit">
