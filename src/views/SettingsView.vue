@@ -1,15 +1,16 @@
 <template>
   <NavBar />
-  <div class="pt-28 px-6 max-w-160 mx-auto w-full h-screen">
-    <div class="flex-row flex px-6">
-      <router-link
-        to="/tasks"
-        class="bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full w-10 h-10 p-2 mr-2"
+  <div class="pt-16 max-w-160 mx-auto w-full h-screen flex flex-col">
+    <div class="mb-4 sm:pt-16 pt-8 p-6">
+      <div class="mb-4 sm:pt-16 flex items-center">
+        <router-link
+          to="/tasks"
+          class="bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full w-10 h-10 p-2 mr-2"
         ><i class="material-icons">arrow_back</i></router-link
-      >
-      <h1 class="text-3xl w-full font-bold text-cennter mb-4 pr-12">Settings</h1>
-    </div>
-    <div class="h-min space-y-4">
+        >
+        <h1 class="text-3xl flex-grow font-bold text-center mb-4">Settings</h1>
+      </div>
+      <div class="flex-grow overflow-y-auto">
       <div
         class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
       >
@@ -52,7 +53,7 @@
         </div>
       </div>
       <div
-        class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
+        class="space-y-6 mb-24 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
       >
         <p class="text-lg text-left mb-8">Appearance</p>
         <div class="space-y-4">
@@ -68,6 +69,7 @@
             <ToggleSwitch :isChecked="isDarkMode" @change="handleDarkModeChange" />
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>

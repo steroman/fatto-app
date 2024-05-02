@@ -1,6 +1,6 @@
 <template>
       <NavBar />
-    <div class="pt-24 max-w-160 mx-auto w-full h-screen">
+    <div class="pt-16 max-w-160 mx-auto w-full h-screen">
       <button
         @click="openCreateModal()"
         class="fixed right-6 top-24 hidden sm:block md:block lg:block h-12 ml-4 bg-primary hover:bg-hover dark:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl py-2 px-4 hover:shadow-md"
@@ -13,7 +13,7 @@
 
       <template v-else>
         <div class="px-6 h-taskWrap1" v-if="taskSortered.length !== 0">
-          <div class="mb-4 pt-8">
+          <div class="mb-4 sm:pt-16 pt-8">
             <div class="w-full">
               <div class="text-3xl font-bold mb-4 text-center w-full">
                 {{ userStore.displayName ? `${userStore.displayName}'s` : 'Your' }} tasks ({{
@@ -36,7 +36,7 @@
           </div>
         </div>
         <div
-          class="pt-32 sm:pt-24 max-w-160 mx-auto w-full h-screen"
+          class="pt-16 max-w-160 mx-auto w-full h-screen"
           v-else-if="taskSortered.length === 0"
         >
           <div class="pb-6 px-6 overflow-y-auto h-auto flex items-center">
