@@ -59,7 +59,8 @@ onMounted(() => {
       @click="showMenu(!show)"
       class="block appearance-none w-full bg-white dark:bg-gray-700 border border-gray-400 hover:border-gray-500 px-4 py-3 text-left text-lg pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
     >
-      {{ label }} <!-- Displaying the current label of the selected sorting option -->
+      {{ label }}
+      <!-- Displaying the current label of the selected sorting option -->
     </div>
 
     <!-- Icon to indicate the dropdown functionality -->
@@ -82,7 +83,8 @@ onMounted(() => {
           selectedSort === option.value ? 'bg-primary dark:bg-gray-900 text-white' : ''
         ]"
       >
-        {{ option.label }} <!-- Displaying the label of each sorting option -->
+        {{ option.label }}
+        <!-- Displaying the label of each sorting option -->
       </div>
     </div>
   </div>

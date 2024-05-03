@@ -32,15 +32,17 @@ export const useUserStore = defineStore('user', {
     // Getters (none at the moment)
 
     // Actions
-    async function createUser(email, password, displayName) { // Function to create a new user account
+    async function createUser(email, password, displayName) {
+      // Function to create a new user account
       try {
         await createAccount(email, password, displayName)
       } catch (error) {
-        console.error(error) 
+        console.error(error)
       }
     }
 
-    async function signIn(email, password) { // Function to sign in using the provided credentials
+    async function signIn(email, password) {
+      // Function to sign in using the provided credentials
       try {
         user.value = await login(email, password)
       } catch (error) {
@@ -49,7 +51,8 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function seeUser() { // Function to retrieve current user information
+    async function seeUser() {
+      // Function to retrieve current user information
       try {
         user.value = await seeCurrentUser()
         displayName.value = user.value?.user_metadata?.display_name || ''
@@ -58,7 +61,8 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function signOut() { // Function to sign out the current user
+    async function signOut() {
+      // Function to sign out the current user
       try {
         user.value = await logout()
       } catch (error) {
@@ -66,7 +70,8 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function updateUserData(userData) { // Function to update user data
+    async function updateUserData(userData) {
+      // Function to update user data
       try {
         const response = await updateUser(userData)
         user.value = response.user
@@ -77,7 +82,8 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function resetPassword(email) { // Function to initiate a password reset
+    async function resetPassword(email) {
+      // Function to initiate a password reset
       try {
         user.value = await resetPassWithEmail(email)
       } catch (error) {
@@ -85,7 +91,8 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function fetchUserSortingPreference() { // Function to fetch the user's sorting preference
+    async function fetchUserSortingPreference() {
+      // Function to fetch the user's sorting preference
       try {
         const sortingPrefFetched = await fetchSortingPreference(user.value.id)
         sortingPreference.value = sortingPrefFetched
@@ -94,7 +101,8 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function updateUserSortingPreference(newSortingPref) {  // Function to update the user's sorting preference
+    async function updateUserSortingPreference(newSortingPref) {
+      // Function to update the user's sorting preference
       try {
         const updatedSortingPref = await updateSortingPreference(user.value.id, newSortingPref)
         sortingPreference.value = updatedSortingPref
@@ -103,7 +111,8 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function fetchUserHideCompletedSetting() { // Function to fetch the user's hide completed tasks setting
+    async function fetchUserHideCompletedSetting() {
+      // Function to fetch the user's hide completed tasks setting
       try {
         const hideCompletedSettingFetched = await fetchHideCompletedSetting(user.value.id)
         hideCompletedSetting.value = hideCompletedSettingFetched
@@ -112,7 +121,8 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function updateUserHideCompletedSetting(newHideCompletedSetting) { // Function to update the user's hide completed tasks setting
+    async function updateUserHideCompletedSetting(newHideCompletedSetting) {
+      // Function to update the user's hide completed tasks setting
       try {
         const updatedHideCompletedSetting = await updateHideCompletedSetting(
           user.value.id,
@@ -124,7 +134,8 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function fetchDarkMode() { // Function to fetch the user's dark mode setting
+    async function fetchDarkMode() {
+      // Function to fetch the user's dark mode setting
       try {
         const darkMode = await fetchDarkModeSetting(user.value.id)
         isDarkMode.value = darkMode
@@ -133,7 +144,8 @@ export const useUserStore = defineStore('user', {
       }
     }
 
-    async function updateDarkMode(newDarkMode) { // Function to update the user's dark mode setting
+    async function updateDarkMode(newDarkMode) {
+      // Function to update the user's dark mode setting
       try {
         const updatedDarkMode = await updateDarkModeSetting(user.value.id, newDarkMode)
         isDarkMode.value = updatedDarkMode
@@ -167,7 +179,8 @@ export const useUserStore = defineStore('user', {
       updateDarkMode // Exposing the updateDarkMode function
     }
   },
-  persist: { // Persisting the state using local storage
+  persist: {
+    // Persisting the state using local storage
     enabled: true, // Enabling persistence
     strategies: [
       {

@@ -10,7 +10,9 @@
           'rounded-md py-3 px-6 my-2 absolute top-10 mx-auto toast z-50'
         ]"
       >
-        <span :class="[success ? 'text-green-600' : 'text-red-600', 'font-semibold']">{{ message }}</span>
+        <span :class="[success ? 'text-green-600' : 'text-red-600', 'font-semibold']">{{
+          message
+        }}</span>
       </div>
     </transition>
   </div>

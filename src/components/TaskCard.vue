@@ -4,7 +4,8 @@ import { useTasksStore } from '@/stores/tasksStore'
 
 // Defining props, in this case, a single prop called 'task'
 const props = defineProps({
-  task: { // The task prop is of Object type and is required
+  task: {
+    // The task prop is of Object type and is required
     type: Object,
     required: true
   }
@@ -41,20 +42,20 @@ const deleteTask = async () => {
 }
 
 // Function to format the timestamp of the task for display
-  // Parsing the timestamp into a human-readable date and time format
-  // (month, day, year, hour, minute, AM/PM)
-  // Example output: "Sep 28, 2021 at 3:45 pm"
+// Parsing the timestamp into a human-readable date and time format
+// (month, day, year, hour, minute, AM/PM)
+// Example output: "Sep 28, 2021 at 3:45 pm"
 const formatTimestamp = (timestamp) => {
-  const date = new Date(timestamp);
-  const monthShort = date.toLocaleString('en-US', { month: 'short' });
-  const day = date.getDate();
-  const year = date.getFullYear();
-  const hour = date.getHours();
-  const minute = date.getMinutes();
-  const amPm = hour < 12 ? 'am' : 'pm';
-  const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-  const formattedMinute = String(minute).padStart(2, '0');
-  return `${monthShort} ${day}, ${year} at ${formattedHour}:${formattedMinute} ${amPm}`;
+  const date = new Date(timestamp)
+  const monthShort = date.toLocaleString('en-US', { month: 'short' })
+  const day = date.getDate()
+  const year = date.getFullYear()
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  const amPm = hour < 12 ? 'am' : 'pm'
+  const formattedHour = hour % 12 === 0 ? 12 : hour % 12
+  const formattedMinute = String(minute).padStart(2, '0')
+  return `${monthShort} ${day}, ${year} at ${formattedHour}:${formattedMinute} ${amPm}`
 }
 // Function to open the edit modal for the task
 const openEditModal = () => {
@@ -75,7 +76,8 @@ const openEditModal = () => {
       <div
         class="text-primary font-semibold text-lg text-left max-w-taskWrap1 break-words hyphens-auto"
       >
-        {{ formatTitle(task.title) }} <!-- Displaying the formatted title of the task -->
+        {{ formatTitle(task.title) }}
+        <!-- Displaying the formatted title of the task -->
       </div>
       <div class="space-x-1 min-w-20">
         <!-- Button to open the edit modal for the task -->

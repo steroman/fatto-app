@@ -14,17 +14,20 @@ export const useToastStore = defineStore('toast', {
     // Getters (currently empty)
 
     // Actions
-    function showToast(isSuccess, msg) { // Function to show the toast with a success state and message
+    function showToast(isSuccess, msg) {
+      // Function to show the toast with a success state and message
       success.value = isSuccess // Updating the success state of the toast
       message.value = msg // Updating the message to be displayed
       show.value = true // Showing the toast
       clearTimeout(timerId.value) // Clearing any existing timer
-      timerId.value = setTimeout(() => { // Setting a timer to hide the toast after 5000ms (5 seconds)
+      timerId.value = setTimeout(() => {
+        // Setting a timer to hide the toast after 5000ms (5 seconds)
         show.value = false // Hiding the toast after the specified duration
       }, 5000)
     }
 
-    function closeToast() { // Function to close the toast
+    function closeToast() {
+      // Function to close the toast
       show.value = false // Hiding the toast
     }
 
@@ -40,7 +43,8 @@ export const useToastStore = defineStore('toast', {
       // Getters and additional actions can be added here if needed
     }
   },
-  persist: { // Persisting the state using local storage
+  persist: {
+    // Persisting the state using local storage
     enabled: true, // Enabling persistence
     strategies: [
       {
