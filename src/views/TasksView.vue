@@ -96,9 +96,10 @@ const saveEditedTask = async (title) => {
         <div class="mb-4 sm:pt-16 pt-8">
           <div class="w-full">
             <div class="text-3xl font-bold mb-4 text-center w-full">
-              {{ userStore.displayName ? `${userStore.displayName}'s` : 'Your' }} tasks ({
-              taskSortered.length })
-            </div>
+                {{ userStore.displayName ? `${userStore.displayName}'s` : 'Your' }} tasks ({{
+                  taskSortered.length
+                }})
+              </div>
           </div>
           <!-- Sorting component -->
           <SortTasks />
