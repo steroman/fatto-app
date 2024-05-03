@@ -162,13 +162,13 @@ const onLogoutClick = async () => {
           class="bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full w-10 h-10 p-2 mr-2"
           ><i class="material-icons">arrow_back</i></router-link
         >
-        <h1 class="text-3xl flex-grow font-bold text-center mb-4">Settings</h1>
+        <h1 class="text-3xl flex-grow font-bold text-center pr-12">Settings</h1>
       </div>
       <div class="flex-grow overflow-y-auto">
         <div
-          class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
+          class="space-y-4 mb-10 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
         >
-          <p class="text-lg text-left mb-8">Account</p>
+          <p class="text-lg text-left mb-6">Account</p>
           <!-- Render account settings -->
           <div>
             <p class="text-left font-bold text-lg">Name</p>
@@ -212,7 +212,7 @@ const onLogoutClick = async () => {
         </div>
         <!-- Render appearance settings -->
         <div
-          class="space-y-6 mb-24 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
+          class="space-y-4 mb-10 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
         >
           <p class="text-lg text-left mb-8">Appearance</p>
           <div class="space-y-4">
