@@ -1,7 +1,10 @@
+// Importing necessary functions and variables from Vue and Vuelidate
+
 import { defineStore, storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { createTask, deleteTask, fetchTasks, updateTask } from '@/api/tasksApi'
 import { useUserStore } from '@/stores/userStore'
+// Constant defining sorting options for tasks
 
 export const SORT_OPTIONS = [
   { label: 'Internal ID (default)', value: 'id' },
@@ -11,15 +14,20 @@ export const SORT_OPTIONS = [
   { label: 'Name A to Z', value: 'a-first' },
   { label: 'Name Z to A', value: 'z-first' }
 ]
+// Define and export the tasks store
 
 export const useTasksStore = defineStore('tasks', () => {
+  // Access the user store
+
   const userStore = useUserStore()
+  // Destructure necessary properties from the user store
+
   const { sortingPreference, hideCompletedSetting } = storeToRefs(userStore)
 
-  // State
+  // State: array to hold tasks
   const tasks = ref([])
 
-  // Getters
+  // Getter to filter visible tasks based on hideCompletedSetting
   const tasksVisible = computed(() => {
     if (hideCompletedSetting === undefined) {
       return tasks.value
@@ -31,6 +39,7 @@ export const useTasksStore = defineStore('tasks', () => {
       return tasks.value
     }
   })
+  // Getter to sort tasks based on sortingPreference
 
   const taskSortered = computed(() => {
     const tasksSorted = [...tasksVisible.value]
@@ -52,7 +61,7 @@ export const useTasksStore = defineStore('tasks', () => {
     }
   })
 
-  // Actions
+  // Action to fetch all tasks
 
   async function fetchAllTasks() {
     try {
@@ -64,9 +73,9 @@ export const useTasksStore = defineStore('tasks', () => {
       console.error(error)
     }
   }
+  // Action to create a new task
 
   async function createNewTask(task) {
-    // Accept userId as a parameter
     try {
       const userStore = useUserStore()
       const userId = userStore.user.id
@@ -75,6 +84,7 @@ export const useTasksStore = defineStore('tasks', () => {
       console.error(error)
     }
   }
+  // Action to update an existing task
 
   async function updateExistingTask(task) {
     try {
@@ -87,6 +97,7 @@ export const useTasksStore = defineStore('tasks', () => {
       console.error(error)
     }
   }
+  // Action to delete an existing task
 
   async function deleteExistingTask(task) {
     try {
@@ -95,6 +106,7 @@ export const useTasksStore = defineStore('tasks', () => {
       console.error(error)
     }
   }
+  // Return state, getters, and actions to be used by components
 
   return {
     // State

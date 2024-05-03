@@ -1,4 +1,5 @@
 <script setup>
+// Import necessary Vue functions and components
 import { ref, reactive, computed } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useToastStore } from '@/stores/toastStore'
@@ -6,18 +7,22 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, email, helpers } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
 
+// Initialize necessary stores and router
 const userStore = useUserStore()
 const router = useRouter()
 const toastStore = useToastStore()
 
+// Define reactive variables and states
 const message = ref('')
 const success = ref(true)
 
+// Define reactive form fields
 const form = reactive({
   email: '',
   password: ''
 })
 
+// Define validation rules for form fields
 const rules = computed(() => {
   return {
     email: {
@@ -30,8 +35,10 @@ const rules = computed(() => {
   }
 })
 
+// Use Vuelidate for form validation
 const v$ = useVuelidate(rules, form)
 
+// Function to sign in user and redirect
 const signInAndRedirect = async () => {
   try {
     await userStore.signIn(form.email, form.password)
@@ -49,6 +56,7 @@ const signInAndRedirect = async () => {
   }
 }
 
+// Function to handle form submission
 async function handleSubmit() {
   const result = await v$.value.$validate()
   if (!result) {
@@ -62,6 +70,7 @@ async function handleSubmit() {
 </script>
 
 <template>
+  <!-- Main container -->
   <div class="pt-16 px-6 max-w-120 mx-auto w-full h-screen">
     <!-- Logo and title -->
     <img src="@/assets/logo.svg" class="w-48 mx-auto mb-8" />
@@ -69,8 +78,8 @@ async function handleSubmit() {
 
     <!-- Login form -->
     <form @submit.prevent="handleSubmit" class="pb-28">
+      <!-- Email input -->
       <div class="space-y-4 mb-6 mt-4">
-        <!-- Email input -->
         <div class="space-y-1">
           <label class="font-medium text-lg text-left w-full block" for="email">Email *</label>
           <input
@@ -86,7 +95,9 @@ async function handleSubmit() {
 
         <!-- Password input -->
         <div class="space-y-1">
-          <label class="font-medium text-lg text-left w-full block" for="password">Password *</label>
+          <label class="font-medium text-lg text-left w-full block" for="password"
+            >Password *</label
+          >
           <input
             type="password"
             v-model="form.password"
@@ -108,14 +119,27 @@ async function handleSubmit() {
       </button>
 
       <!-- Error message -->
-      <span :class="['block text-red-500 text-sm text-center mt-2', success.value ? 'invisible' : 'visible']">
+      <span
+        :class="[
+          'block text-red-500 text-sm text-center mt-2',
+          success.value ? 'invisible' : 'visible'
+        ]"
+      >
         {{ message }}
       </span>
 
       <!-- Navigation links -->
       <div class="py-4">
-        <p class="mb-2">No account? <router-link to="/signup" class="text-primary hover:text-hover">Sign up</router-link></p>
-        <p>Forgot password? <router-link to="/forgot-password" class="text-primary hover:text-hover">Reset it</router-link></p>
+        <p class="mb-2">
+          No account?
+          <router-link to="/signup" class="text-primary hover:text-hover">Sign up</router-link>
+        </p>
+        <p>
+          Forgot password?
+          <router-link to="/forgot-password" class="text-primary hover:text-hover"
+            >Reset it</router-link
+          >
+        </p>
       </div>
     </form>
   </div>

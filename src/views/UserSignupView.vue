@@ -1,105 +1,18 @@
-<template>
-  <div class="pt-16 px-6 max-w-120 mx-auto w-full h-screen" v-if="!confirmationSent">
-    <img src="@/assets/logo.svg" class="w-12 mx-auto mb-4" />
-    <h1 class="text-3xl font-bold text-center mb-2">Welcome to Fatto</h1>
-    <p class="text-lg text-center mb-4">Create an account to start using Fatto for free.</p>
-    <form @submit.prevent="handleSubmit" class="pb-10">
-      <div class="space-y-4 mb-6">
-        <div class="space-y-1">
-          <label class="font-medium text-lg text-left w-full block" for="name">Name (optional)</label>
-          <input
-            type="text"
-            v-model="form.name"
-            id="name"
-            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.name.$error ? 'outline-red-300' : ''} ${v$.name.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
-          />
-          <span v-if="v$.name.$error" class="block text-red-500 text-sm text-left">{{
-            v$.name.$errors[0].$message
-          }}</span>
-        </div>
-        <div class="space-y-1">
-          <label class="font-medium text-lg text-left w-full block" for="email">Email *</label>
-          <input
-            type="text"
-            v-model="form.email"
-            id="email"
-            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.email.$error ? 'outline-red-300' : ''} ${v$.email.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
-          />
-          <span v-if="v$.email.$error" class="block text-red-500 text-sm text-left">{{
-            v$.email.$errors[0].$message
-          }}</span>
-        </div>
-        <div class="space-y-1">
-          <label class="font-medium text-lg text-left w-full block" for="password"
-            >Password *</label
-          >
-          <input
-            type="password"
-            v-model="form.password"
-            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.password.$error ? 'outline-red-300' : ''} ${v$.password.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
-          />
-          <span v-if="!v$.password.$error && !v$.password.$errors.length" class="block text-sm text-left"
->Minimum 6 characters</span
-          >
-          <span v-if="v$.password.$error" class="block text-red-500 text-sm text-left"
-            >{{ v$.password.$errors[0].$message }}</span
-          >
-        </div>
-        <div class="space-y-1">
-          <label class="font-medium text-lg text-left w-full block" for="cofirm-password"
-            >Confirm password *</label
-          >
-          <input
-            type="password"
-            v-model="form.confirmPassword"
-            id="confirm-password"
-            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.confirmPassword.$error ? 'outline-red-300' : ''} ${v$.confirmPassword.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
-          />
-          <span v-if="v$.confirmPassword.$error" class="block text-red-500 text-sm text-left">{{
-            v$.confirmPassword.$errors[0].$message
-          }}</span>
-        </div>
-      </div>
-      <button
-        type="submit"
-        class="w-full h-14 mb-2 bg-primary dark:bg-gray-700 hover:bg-hover dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
-      >
-        Sign up
-      </button>
-      <span
-        :class="['block text-red-500 text-sm text-center', formIsValid ? 'invisible' : 'visible']"
-      >{{ message }}</span>
-      <p class="mb-2 mt-2">
-        Already got an account?
-        <router-link to="/login" class="px-1 text-primary hover:text-hover">Log in</router-link>
-      </p>
-    </form>
-  </div>
-  <div class="pt-10 px-6 max-w-120 mx-auto w-full h-screen" v-if="confirmationSent">
-    <h1 class="text-3xl font-bold text-center mb-4">Check your inbox</h1>
-    <p class="text-lg text-center mb-8">
-      We sent an email to <strong>{{ form.email }}</strong
-      >. <br />Open the link in the email to verify your account and start using Fatto.
-    </p>
-    <router-link
-      to="/"
-      class="w-full h-14 block bg-primary hover:bg-hover text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
-      >Go back home</router-link
-    >
-  </div>
-</template>
-
 <script setup>
+// Import necessary Vue functions and components
 import { ref, reactive, computed } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, sameAs, minLength, helpers } from '@vuelidate/validators'
 
+// Initialize user store
 const userStore = useUserStore()
 
+// Define reactive variables and states
 const message = ref('')
 const formIsValid = ref(true)
 
+// Define reactive form fields
 const form = reactive({
   name: '',
   email: '',
@@ -165,3 +78,111 @@ async function signUp() {
   }
 }
 </script>
+
+<template>
+  <!-- Main container -->
+  <div class="pt-16 px-6 max-w-120 mx-auto w-full h-screen" v-if="!confirmationSent">
+    <!-- Logo and welcome message -->
+    <img src="@/assets/logo.svg" class="w-12 mx-auto mb-4" />
+    <h1 class="text-3xl font-bold text-center mb-2">Welcome to Fatto</h1>
+    <p class="text-lg text-center mb-4">Create an account to start using Fatto for free.</p>
+    <!-- Sign-up form -->
+    <form @submit.prevent="handleSubmit" class="pb-10">
+      <div class="space-y-4 mb-6">
+        <!-- Name input -->
+        <div class="space-y-1">
+          <label class="font-medium text-lg text-left w-full block" for="name"
+            >Name (optional)</label
+          >
+          <input
+            type="text"
+            v-model="form.name"
+            id="name"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.name.$error ? 'outline-red-300' : ''} ${v$.name.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+          />
+          <span v-if="v$.name.$error" class="block text-red-500 text-sm text-left">{{
+            v$.name.$errors[0].$message
+          }}</span>
+        </div>
+        <!-- Email input -->
+        <div class="space-y-1">
+          <label class="font-medium text-lg text-left w-full block" for="email">Email *</label>
+          <input
+            type="text"
+            v-model="form.email"
+            id="email"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.email.$error ? 'outline-red-300' : ''} ${v$.email.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+          />
+          <span v-if="v$.email.$error" class="block text-red-500 text-sm text-left">{{
+            v$.email.$errors[0].$message
+          }}</span>
+        </div>
+        <!-- Password input -->
+        <div class="space-y-1">
+          <label class="font-medium text-lg text-left w-full block" for="password"
+            >Password *</label
+          >
+          <input
+            type="password"
+            v-model="form.password"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.password.$error ? 'outline-red-300' : ''} ${v$.password.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+          />
+          <span
+            v-if="!v$.password.$error && !v$.password.$errors.length"
+            class="block text-sm text-left"
+            >Minimum 6 characters</span
+          >
+          <span v-if="v$.password.$error" class="block text-red-500 text-sm text-left">{{
+            v$.password.$errors[0].$message
+          }}</span>
+        </div>
+        <!-- Confirm Password input -->
+        <div class="space-y-1">
+          <label class="font-medium text-lg text-left w-full block" for="cofirm-password"
+            >Confirm password *</label
+          >
+          <input
+            type="password"
+            v-model="form.confirmPassword"
+            id="confirm-password"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.confirmPassword.$error ? 'outline-red-300' : ''} ${v$.confirmPassword.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+          />
+          <span v-if="v$.confirmPassword.$error" class="block text-red-500 text-sm text-left">{{
+            v$.confirmPassword.$errors[0].$message
+          }}</span>
+        </div>
+      </div>
+      <!-- Sign-up button -->
+      <button
+        type="submit"
+        class="w-full h-14 mb-2 bg-primary dark:bg-gray-700 hover:bg-hover dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
+      >
+        Sign up
+      </button>
+      <!-- Error message -->
+      <span
+        :class="['block text-red-500 text-sm text-center', formIsValid ? 'invisible' : 'visible']"
+        >{{ message }}</span
+      >
+      <!-- Login link -->
+      <p class="mb-2 mt-2">
+        Already got an account?
+        <router-link to="/login" class="px-1 text-primary hover:text-hover">Log in</router-link>
+      </p>
+    </form>
+  </div>
+  <!-- Confirmation message -->
+  <div class="pt-10 px-6 max-w-120 mx-auto w-full h-screen" v-if="confirmationSent">
+    <h1 class="text-3xl font-bold text-center mb-4">Check your inbox</h1>
+    <p class="text-lg text-center mb-8">
+      We sent an email to <strong>{{ form.email }}</strong
+      >. <br />Open the link in the email to verify your account and start using Fatto.
+    </p>
+    <!-- Home link -->
+    <router-link
+      to="/"
+      class="w-full h-14 block bg-primary hover:bg-hover text-white hover:text-white rounded-lg text-center font-semibold text-xl p-3 hover:shadow-md"
+      >Go back home</router-link
+    >
+  </div>
+</template>
