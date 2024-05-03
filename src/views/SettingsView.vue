@@ -165,12 +165,11 @@ const onClickChangeName = () => {
   inputType.value = 'text'
   dialogTitle.value = 'Update name'
   labelTitle.value = 'Name (optional)'
-  errorMsg.value = 'Name is required'
   helperText.value = 'Leave blank to delete your name'
   text.value = displayName.value
-  // validateRule.value = {
-  //   required: helpers.withMessage('Name cannot be empty', required)
-  // }
+  validateRule.value = {
+    // required: helpers.withMessage('Name cannot be empty', required)
+  }
 }
 
 const onClickChangeEmail = () => {

@@ -1,8 +1,6 @@
 <script setup>
-import { ref, reactive, computed, watch, onMounted, onUpdated } from 'vue'
-import { useUserStore } from '@/stores/userStore'
+import { reactive, computed } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, helpers } from '@vuelidate/validators'
 
 const props = defineProps({
   type: {
