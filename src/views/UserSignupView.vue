@@ -23,9 +23,6 @@ const form = reactive({
 // Define form validation rules
 const rules = computed(() => {
   return {
-    name: {
-      required: helpers.withMessage('Name cannot be empty', required)
-    },
     email: {
       required: helpers.withMessage('Email address cannot be empty', required),
       email: helpers.withMessage('Enter correct email address', email)
@@ -98,11 +95,9 @@ async function signUp() {
             type="text"
             v-model="form.name"
             id="name"
-            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.name.$error ? 'outline-red-300' : ''} ${v$.name.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+            :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none`"
           />
-          <span v-if="v$.name.$error" class="block text-red-500 text-sm text-left">{{
-            v$.name.$errors[0].$message
-          }}</span>
+
         </div>
         <!-- Email input -->
         <div class="space-y-1">
