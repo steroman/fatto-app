@@ -155,7 +155,7 @@ const onLogoutClick = async () => {
   <!-- Main settings container -->
   <div class="pt-16 max-w-160 mx-auto w-full h-screen flex flex-col">
     <div class="mb-4 sm:pt-16 pt-8 p-6">
-      <div class="mb-4 sm:pt-16 flex items-center">
+      <div class="mb-4 flex items-center">
         <!-- Back button and title -->
         <router-link
           to="/tasks"
