@@ -69,8 +69,8 @@
       :validateRule="{
         required: helpers.withMessage('Enter a title', required),
         minLength: helpers.withMessage(
-          'The title can\'t be shorter than 3 characters',
-          minLength(3)
+          'The title must be minimum 4 characters',
+          minLength(4)
         )
       }"
       :save="saveEditedTask"
