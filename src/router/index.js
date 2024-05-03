@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
-import PageNotFound from '@/views/PageNotFound.vue'
-// import { supabase } from '@/lib/supabaseClient'
 import { useUserStore } from '@/stores/userStore'
 
 const router = createRouter({
@@ -12,11 +10,6 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   component: () => import('@/views/AboutView.vue')
-    // },
     {
       path: '/login',
       name: 'login',
