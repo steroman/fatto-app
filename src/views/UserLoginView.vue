@@ -103,7 +103,6 @@ async function handleSubmit() {
             v-model="form.password"
             id="password"
             :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.email.$error ? 'outline-red-300' : ''} ${v$.email.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
-            placeholder="Enter your Password"
           />
           <span v-if="v$.password.$error" class="block text-red-500 text-sm text-left">
             {{ v$.password.$errors[0].$message }}
