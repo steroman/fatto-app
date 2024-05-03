@@ -90,23 +90,26 @@ async function handleSubmit() {
             {{ dialogTitle }}
           </h3>
           <div class="mt-2">
-    <div class="space-y-1">
-      <label class="font-medium text-lg text-left w-full block" for="title">{{ labelTitle }}</label>
-      <input
-        :type="type"
-        v-model="form.title"
-        id="title"
-        :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.title.$error ? 'outline-red-300' : 'outline-gray-300'} ${v$.title.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
-      />
-      <!-- Display error message instead of helper text when an error occurs -->
-      <template v-if="v$.title.$error">
-        <span class="block text-red-500 text-sm text-left">{{ v$.title.$errors[0].$message }}</span>
-      </template>
-      <template v-else>
-        <span v-if="helperText" class="block text-sm text-left">{{ helperText }}</span>
-      </template>
-    </div>
-  </div>
+            <div class="space-y-1">
+              <label class="font-medium text-lg text-left w-full block" for="title">{{
+                labelTitle
+              }}</label>
+              <input
+                :type="type"
+                v-model="form.title"
+                id="title"
+                :class="`rounded-md bg-white dark:text-gray-900 w-full h-12 text-sm px-6 py-4 outline-none ${v$.title.$error ? 'outline-red-300' : 'outline-gray-300'} ${v$.title.$error ? 'focus:outline-red-600' : 'focus:outline-primary'}`"
+              />
+              <template v-if="v$.title.$error">
+                <span class="block text-red-500 text-sm text-left">{{
+                  v$.title.$errors[0].$message
+                }}</span>
+              </template>
+              <template v-else>
+                <span v-if="helperText" class="block text-sm text-left">{{ helperText }}</span>
+              </template>
+            </div>
+          </div>
         </div>
         <div class="bg-white dark:bg-gray-800 px-4 py-3 sm:px-6 flex flex-col sm:flex-row-reverse">
           <div class="flex justify-end sm:justify-start w-full">
@@ -117,11 +120,9 @@ async function handleSubmit() {
               Save
             </button>
             <div class="sm:hidden h-4"></div>
-            <!-- Spacer for mobile -->
           </div>
           <div class="hidden sm:flex sm:justify-center sm:items-center">
             <div class="w-4"></div>
-            <!-- Spacer for desktop -->
           </div>
           <div class="flex justify-end sm:justify-start w-full">
             <button
