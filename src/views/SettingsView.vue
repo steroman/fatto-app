@@ -42,15 +42,15 @@ const saveText = async (newText) => {
     if (inputType.value === 'text') {
       newData = { data: { display_name: newText } }
       toastMessage.value = 'Name changed successfully'
-      errorMsg.value = 'Couldn\'t update your name. Try again.'
+      errorMsg.value = "Couldn't update your name. Try again."
     } else if (inputType.value === 'email') {
       newData = { email: newText }
       toastMessage.value = 'Check your inbox to complete the email change'
-      errorMsg.value = 'Couldn\'t update your email. Try again.'
+      errorMsg.value = "Couldn't update your email. Try again."
     } else if (inputType.value === 'password') {
       newData = { password: newText }
       toastMessage.value = 'Password changed successfully'
-      errorMsg.value = 'Couldn\'t update your password. Try again.'
+      errorMsg.value = "Couldn't update your password. Try again."
     }
     // Call user store method to update user data
     await userStore.updateUserData(newData)
@@ -121,7 +121,7 @@ const handleHideTasksSettingChange = async (value) => {
       toastStore.showToast(true, 'Completed tasks shown')
     }
   } catch (err) {
-    toastStore.showToast(false, 'Couldn\'t change tasks appearance')
+    toastStore.showToast(false, "Couldn't change tasks appearance")
   }
 }
 
@@ -138,7 +138,7 @@ const handleDarkModeChange = async (value) => {
       document.documentElement.classList.remove('dark')
     }
   } catch (err) {
-    toastStore.showToast(false, 'Couldn\'t change theme')
+    toastStore.showToast(false, "Couldn't change theme")
   }
 }
 
@@ -148,7 +148,6 @@ const onLogoutClick = async () => {
   await userStore.signOut()
 }
 </script>
-
 
 <template>
   <!-- Render NavBar component -->
@@ -161,11 +160,14 @@ const onLogoutClick = async () => {
         <router-link
           to="/tasks"
           class="bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full w-10 h-10 p-2 mr-2"
-        ><i class="material-icons">arrow_back</i></router-link>
+          ><i class="material-icons">arrow_back</i></router-link
+        >
         <h1 class="text-3xl flex-grow font-bold text-center mb-4">Settings</h1>
       </div>
       <div class="flex-grow overflow-y-auto">
-        <div class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md">
+        <div
+          class="space-y-6 mb-12 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
+        >
           <p class="text-lg text-left mb-8">Account</p>
           <!-- Render account settings -->
           <div>
@@ -209,13 +211,18 @@ const onLogoutClick = async () => {
           </div>
         </div>
         <!-- Render appearance settings -->
-        <div class="space-y-6 mb-24 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md">
+        <div
+          class="space-y-6 mb-24 border-2 p-4 border-primary rounded-md bg-white dark:bg-gray-700 shadow-md"
+        >
           <p class="text-lg text-left mb-8">Appearance</p>
           <div class="space-y-4">
             <!-- Toggle switch for hiding completed tasks -->
             <div class="flex flex-row justify-between items-center">
               <p>Hide completed tasks</p>
-              <ToggleSwitch :isChecked="hideCompletedSetting" @change="handleHideTasksSettingChange" />
+              <ToggleSwitch
+                :isChecked="hideCompletedSetting"
+                @change="handleHideTasksSettingChange"
+              />
             </div>
             <!-- Toggle switch for dark mode -->
             <div class="flex flex-row justify-between items-center">
@@ -228,7 +235,9 @@ const onLogoutClick = async () => {
     </div>
   </div>
   <!-- Log out button for mobile view -->
-  <div class="block sm:hidden md:hidden lg:hidden fixed bg-secondary dark:bg-gray-800 p-6 w-full bottom-0 inset-x-0">
+  <div
+    class="block sm:hidden md:hidden lg:hidden fixed bg-secondary dark:bg-gray-800 p-6 w-full bottom-0 inset-x-0"
+  >
     <button
       @click="onLogoutClick"
       class="w-full h-12 mb-2 bg-primary hover:bg-hover dark:bg-gray-700 dark:hover:bg-gray-600 text-white hover:text-white rounded-lg text-center font-semibold text-md p-3 hover:shadow-md"
