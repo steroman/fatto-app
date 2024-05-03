@@ -13,7 +13,7 @@ const props = defineProps({
 
 // Function to format the title of the task for display
 const formatTitle = (title) => {
-  return title.length > 12 ? `${title.substring(0, 12)} …` : title
+  return title.length > 20 ? `${title.substring(0, 20)} …` : title
 }
 
 // Defining custom events to be emitted by the component, in this case, an 'edit' event
